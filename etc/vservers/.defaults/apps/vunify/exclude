@@ -1,0 +1,16 @@
+# Don't hashify these dirs
+/dev
+/etc
+/home
+/proc
+/mnt
+/root
+/selinux
+/sys
+/tmp
+# Only include the apt archive, and nothing else from /var
++/var/cache/apt/archives
+/var
+/data
+/media
+/.git
