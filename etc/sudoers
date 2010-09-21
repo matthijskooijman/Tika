@@ -5,7 +5,7 @@
 # See the man page for details on how to write a sudoers file.
 #
 
-Defaults	env_reset,env_keep+=GIT_*
+Defaults	env_reset,env_keep+=GIT_*,env_keep+=SSH_*
 
 # Host alias specification
 
