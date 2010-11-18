@@ -7,7 +7,7 @@
 # <file system> <mount point>   <type>  <options>       <dump>  <pass>
 proc            /proc           proc    defaults        0       0
 /dev/mapper/tika-root /               ext3    errors=remount-ro 0       1
-/dev/mapper/tika-data /data           ext4    defaults        0       2
-/dev/mapper/tika-home /home           ext3    defaults        0       2
+/dev/mapper/tika-data /data           ext4    defaults,acl        0       2
+/dev/mapper/tika-home /home           ext3    defaults,acl        0       2
 /dev/mapper/tika-vservers /vservers       ext4    defaults        0       2
 /dev/mapper/tika-swap none            swap    sw              0       0
