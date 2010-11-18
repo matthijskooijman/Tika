@@ -1,0 +1,7 @@
+# Don't copy ssh keys when cloning
+/etc/ssh/*key*
+# Dont' copy temp files when cloning (But do copy the dirs themselves)
+/tmp/*
+/var/tmp/*
+# Don't copy any spool files (but again, do copy the dirs)
+/var/spool/*/*
