@@ -1,1 +1,3 @@
 deb http://cdn.debian.net/debian squeeze main
+
+deb http://apt.stderr.nl stderr main
