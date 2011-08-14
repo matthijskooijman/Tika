@@ -11,3 +11,4 @@ proc            /proc           proc    defaults        0       0
 /dev/mapper/tika-home /home           ext3    defaults,acl        0       2
 /dev/mapper/tika-vservers /vservers       ext4    defaults        0       2
 /dev/mapper/tika-swap none            swap    sw              0       0
+cgroup                /var/local/cgroup cgroup defaults 0 0
