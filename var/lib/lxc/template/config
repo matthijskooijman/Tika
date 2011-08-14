@@ -1,12 +1,18 @@
-lxc.tty = 4
-lxc.pts = 256
+# Hostname
+lxc.utsname = template
+
+# Use this root filesystem
 lxc.rootfs = /var/lib/lxc/template/rootfs
 
 # Log console output
 lxc.console = /var/log/lxc/template.lxc
 
-# Hostname
-lxc.utsname = template
+# The number of ttys available (shouldn't be less than the getty's
+# configured in the inittab).
+lxc.tty = 4
+
+# Use private pts for the container
+lxc.pts = 256
 
 # Deny all devices, except the following
 lxc.cgroup.devices.deny = a
