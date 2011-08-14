@@ -2,6 +2,9 @@ lxc.tty = 4
 lxc.pts = 256
 lxc.rootfs = /var/lib/lxc/template/rootfs
 
+# Hostname
+lxc.utsname = template
+
 # Deny all devices, except the following
 lxc.cgroup.devices.deny = a
 # /dev/null
