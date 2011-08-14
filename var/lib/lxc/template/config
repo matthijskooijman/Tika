@@ -1,5 +1,5 @@
 lxc.tty = 4
-lxc.pts = 1024
+lxc.pts = 256
 lxc.rootfs = /var/lib/lxc/template/rootfs
 
 # Deny all devices, except the following
