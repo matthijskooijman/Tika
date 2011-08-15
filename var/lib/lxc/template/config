@@ -7,6 +7,17 @@ lxc.rootfs = /var/lib/lxc/template/rootfs
 # Log console output
 lxc.console = /var/log/lxc/template.lxc
 
+# The container gets a single virtual eth0 interface with a statically assigned
+# address (assigned by lxc-start, no need for the container to assign any
+# address itself).
+lxc.network.type = veth
+lxc.network.flags = up
+lxc.network.veth.pair = lxc-template
+lxc.network.name = eth0
+lxc.network.link = br-lxc
+lxc.network.ipv4 = 10.42.0.10/24
+lxc.network.ipv4.gateway = auto
+
 # The number of ttys available (shouldn't be less than the getty's
 # configured in the inittab).
 lxc.tty = 4
