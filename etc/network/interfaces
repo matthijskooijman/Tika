@@ -8,3 +8,12 @@ iface lo inet loopback
 # The primary network interface
 allow-hotplug eth0
 iface eth0 inet dhcp
+
+auto br-lxc
+iface br-lxc inet static
+        # Set this up as a bridge, but don't add any ports yet. Ports
+        # will be added when lxc containers are created later on.
+        bridge_ports none
+        # Statically configure this bridge
+        address 10.42.0.1
+        netmask 255.255.255.0
