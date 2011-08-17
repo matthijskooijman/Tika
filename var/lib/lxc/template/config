@@ -2,7 +2,7 @@
 lxc.utsname = template
 
 # Use this root filesystem
-lxc.rootfs = /var/lib/lxc/template/rootfs
+lxc.rootfs = /containers/template
 
 # Log console output
 lxc.console = /var/log/lxc/template.lxc
