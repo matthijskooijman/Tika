@@ -49,6 +49,7 @@ lxc.cgroup.devices.allow = c 5:2 rwm
 # rtc
 lxc.cgroup.devices.allow = c 254:0 rwm
 
-# mounts point
-lxc.mount.entry=proc /var/lib/lxc/template/rootfs/proc proc nodev,noexec,nosuid 0 0
-lxc.mount.entry=sysfs /var/lib/lxc/template/rootfs/sys sysfs defaults  0 0
+# mounts (note that the second item in each list is the mount point, relative
+# to the rootfs)
+lxc.mount.entry=proc proc proc nodev,noexec,nosuid 0 0
+lxc.mount.entry=sysfs sys sysfs defaults  0 0
