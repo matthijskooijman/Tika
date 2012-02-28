@@ -1,0 +1,18 @@
+# PAM configuration for the Secure Shell service
+
+# Standard Un*x authentication.
+@include common-auth
+
+# Standard Un*x authorization.
+@include common-account
+
+# Standard Un*x session setup and teardown.
+@include common-session
+
+# Print the message of the day upon successful login.
+session		optional	pam_motd.so
+session 	required	pam_permit.so
+
+# Standard Un*x password updating (not sure if OpenSSH actually uses this, but
+# well...)
+@include common-password

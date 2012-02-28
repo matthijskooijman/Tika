@@ -1,0 +1,17 @@
+#
+# /etc/pam.d/common-account - authorization settings common to all services
+#
+# This file is included from other service-specific PAM config files.
+
+# pam_unix does general checks based on NSS info, so it also works for both
+# local and ldap users.
+account		required	pam_unix.so
+
+# pam_ldap does additional checks (in particular checking the host ldap
+# attribute). Passing minimum_uid makes it work only for non-local users
+# (checking this based on the uid is not really elegant, but there is no
+# perfect way to do this anyway). We pass ignore_unknown_user to make the
+# module return 'ignore' instead of 'user_unknown' for local users, which gets
+# handled by 'required' properly (without having to specify a verbose custom
+# thing).
+account		required	pam_ldap.so ignore_unknown_user minimum_uid=1000

@@ -1,0 +1,18 @@
+#
+# /etc/pam.d/common-session - session-related modules common to all services
+#
+# This file is included from other service-specific PAM config files.
+
+session		required	pam_limits.so
+
+# Write logins to syslog
+session		required	pam_unix.so
+
+# Tell pam_ldap about sessions as well, though it does not currently do
+# anything.
+session		required	pam_ldap.so
+
+# Load locale variables
+session		required	pam_env.so envfile=/etc/default/locale
+
+#session	required	pam_mkhomedir.so skel=/etc/skel umask=0022

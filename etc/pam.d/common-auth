@@ -1,0 +1,11 @@
+#
+# /etc/pam.d/common-auth - authentication settings common to all services
+#
+# This file is included from other service-specific PAM config files.
+
+# Allow both local and ldap logins.
+auth		sufficient	pam_unix.so nullok_secure
+
+auth		sufficient	pam_ldap.so use_first_pass
+
+auth		required	pam_deny.so
