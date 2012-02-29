@@ -28,6 +28,12 @@ PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 #    ;;
 #esac
 
+# Enable colored prompts by default (note that unlike what the name suggests,
+# this actually doesn't force anything, but triggers a color-detection snippet
+# in ~/.bashrc). Users can override this value (or just throw out the snippet
+# or customize the prompt) in their ~/.bashrc as well.
+force_color_prompt=yes
+
 # enable bash completion in interactive shells
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
