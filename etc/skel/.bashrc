@@ -55,10 +55,14 @@ else
 fi
 unset color_prompt force_color_prompt
 
-# If this is an xterm set the title to user@host:dir
+# If this is an xterm or screen set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
     PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    ;;
+screen)
+    # Only show the hostname in screen, since there is less space
+    PS1="\[\ek${debian_chroot:+($debian_chroot)}\h\e\134\]$PS1"
     ;;
 *)
     ;;
