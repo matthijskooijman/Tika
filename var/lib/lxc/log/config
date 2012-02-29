@@ -56,6 +56,9 @@ lxc.mount.entry=sysfs sys sysfs defaults  0 0
 lxc.mount.entry=/data/users data/users none defaults,bind 0 0
 lxc.mount.entry=/etc/skel etc/skel none defaults,bind,ro 0 0
 
+# container-specific mounts
+lxc.mount.entry=/data/log data/log none defaults,bind 0 0
+
 # Disallow module (un)loading
 lxc.cap.drop = sys_module
 # Disallow doing raw io
