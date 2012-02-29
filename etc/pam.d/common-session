@@ -14,5 +14,3 @@ session		required	pam_ldap.so
 
 # Load locale variables
 session		required	pam_env.so envfile=/etc/default/locale
-
-#session	required	pam_mkhomedir.so skel=/etc/skel umask=0022

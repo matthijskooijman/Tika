@@ -13,6 +13,8 @@
 
 # Print the message of the day upon successful login.
 session		optional	pam_motd.so # [1]
+# Create a homedir for the user, if there is none yet.
+session		optional	pam_mkhomedir.so
 
 # Standard Un*x password updating (not sure if login actually uses this, but
 # well...)
