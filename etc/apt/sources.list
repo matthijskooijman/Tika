@@ -1,13 +1,11 @@
-# 
-# deb cdrom:[Debian GNU/Linux testing _Squeeze_ - Official Snapshot amd64 NETINST Binary-1 20100918-08:55]/ squeeze main
-
-#deb cdrom:[Debian GNU/Linux testing _Squeeze_ - Official Snapshot amd64 NETINST Binary-1 20100918-08:55]/ squeeze main
-
 deb http://ftp.nl.debian.org/debian/ squeeze main non-free contrib
 deb-src http://ftp.nl.debian.org/debian/ squeeze main non-free contrib
 
 deb http://security.debian.org/ squeeze/updates main contrib non-free
 deb-src http://security.debian.org/ squeeze/updates main contrib non-free
+
+deb http://ftp.nl.debian.org/debian/ wheezy main non-free contrib
+deb http://ftp.nl.debian.org/debian/ sid main non-free contrib
 
 # Our own custom repository
 deb http://apt.stderr.nl stderr main
