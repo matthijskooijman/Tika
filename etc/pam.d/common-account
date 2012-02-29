@@ -14,4 +14,4 @@ account		required	pam_unix.so
 # module return 'ignore' instead of 'user_unknown' for local users, which gets
 # handled by 'required' properly (without having to specify a verbose custom
 # thing).
-account		required	pam_ldap.so ignore_unknown_user minimum_uid=1000
+account		required	pam_ldap.so ignore_unknown_user minimum_uid=2000
