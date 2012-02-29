@@ -50,10 +50,11 @@ lxc.cgroup.devices.allow = c 5:2 rwm
 lxc.cgroup.devices.allow = c 254:0 rwm
 
 # mounts (note that the second item in each list is the mount point, relative
-# to the rootfs)
+ to the rootfs)
 lxc.mount.entry=proc proc proc nodev,noexec,nosuid 0 0
 lxc.mount.entry=sysfs sys sysfs defaults  0 0
 lxc.mount.entry=/data/users data/users none defaults,bind 0 0
+lxc.mount.entry=/etc/skel etc/skel none defaults,bind,ro 0 0
 
 # Disallow module (un)loading
 lxc.cap.drop = sys_module

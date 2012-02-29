@@ -55,6 +55,7 @@ lxc.mount.entry=proc proc proc nodev,noexec,nosuid 0 0
 lxc.mount.entry=sysfs sys sysfs defaults  0 0
 lxc.mount.entry=/data/db/ldap data/db/ldap none defaults,bind  0 0
 lxc.mount.entry=/data/users data/users none defaults,bind 0 0
+lxc.mount.entry=/etc/skel etc/skel none defaults,bind,ro 0 0
 
 # Disallow module (un)loading
 lxc.cap.drop = sys_module
