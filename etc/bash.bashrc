@@ -34,11 +34,6 @@ PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 # or customize the prompt) in their ~/.bashrc as well.
 force_color_prompt=yes
 
-# enable bash completion in interactive shells
-if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-    . /etc/bash_completion
-fi
-
 # if the command-not-found package is installed, use it
 if [ -x /usr/lib/command-not-found -o -x /usr/share/command-not-found ]; then
 	function command_not_found_handle {
