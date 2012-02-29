@@ -1,5 +1,5 @@
 # Hostname
-lxc.utsname = template
+lxc.utsname = template.local
 
 # Use this root filesystem
 lxc.rootfs = /containers/template

@@ -1,5 +1,5 @@
 # Hostname
-lxc.utsname = ldap
+lxc.utsname = ldap.local
 
 # Use this root filesystem
 lxc.rootfs = /containers/ldap
