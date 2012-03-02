@@ -1,4 +1,5 @@
 deb http://cdn.debian.net/debian squeeze main
 deb http://cdn.debian.net/debian wheezy main
+deb http://backports.debian.org/debian-backports squeeze-backports main
 
 deb http://apt.stderr.nl stderr main
