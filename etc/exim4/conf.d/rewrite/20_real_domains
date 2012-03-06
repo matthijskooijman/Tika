@@ -1,0 +1,10 @@
+################################
+# If any of the real_domains are in the envelope, rewrite it to our
+# external hostname, since most real_domains are not listed in DNS.
+# Don't rewrite the From address, so we can still see where a message
+# comes from.
+#################################
+
+*@+real_domains $1@EXTERNAL_HOSTNAME E
+
+# vim: set sts=2 expandtab sw=2 ai:

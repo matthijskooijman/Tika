@@ -1,0 +1,41 @@
+
+### acl/40_exim4-config_check_data
+#################################
+
+# This ACL is used after the contents of a message have been received. This
+# is the ACL in which you can test a message's headers or body, and in
+# particular, this is where you can invoke external virus or spam scanners.
+
+acl_check_data:
+
+  # Deny unless the address list headers are syntactically correct.
+  #
+  # This might reject legitimate mail...
+  deny
+    message = Message headers fail syntax check
+    !verify = header_syntax
+
+  accept
+
+  # Don't spamcheck big messages
+  accept
+    condition = ${if >{$message_size}{80k}}
+    add_header = X-Spam-Score: Message too big, not scanned.
+
+  # Deny messages with a large spamscore. The threshold is set by
+  # spamassassin, see required_score in /etc/spamassassin/local.cf
+  deny
+    message = Message was classified as spam
+    # Check using spamassasin, running as the "spamd" user.
+    spam = spamd
+    # Don't reject to some trusted hosts, since they will only generate
+    # useless delivery failures to innocent people. We check this after the
+    # spamcheck, so the next rule can still set the spam headers properly.
+    !hosts = +dont_reject_spam_hosts
+
+  # Accept any other messages, but add spam headers.
+  accept
+    add_header = X-Spam-Score: $spam_score ($spam_bar)
+    add_header = X-Spam-Report: $spam_report
+
+# vim: set sts=2 expandtab sw=2 ai:

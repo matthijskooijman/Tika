@@ -1,0 +1,9 @@
+
+######################################################################
+#                       ACL CONFIGURATION                            #
+#         Specifies access control lists for incoming SMTP mail      #
+######################################################################
+begin acl
+
+
+# vim: set sts=2 expandtab sw=2 ai:

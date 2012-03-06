@@ -1,0 +1,77 @@
+######################################################################
+#                    MAIN CONFIGURATION SETTINGS                     #
+######################################################################
+
+# LDAP server to use for main lookups
+LDAPSERVER=ldap://ldap.local:389
+LDAPBASE=dc=tika,dc=stderr,dc=nl
+LDAPURL=LDAPSERVER/LDAPBASE
+
+# List of domains for which full e-mail addresses are configured on the LDAP
+# directory. This list is taken from LDAP as well. Since an ldapm query
+# returns results separated with newlines, we change the list separator to
+# newline for this list.
+domainlist virtual_domains = <\n ${lookup ldapm {LDAPURL?domainName?sub?(objectClass=maroesjaDomain)}}
+# List of real hosts for which we deliver mail to real users.
+domainlist real_domains = *.tika.stderr.nl : tika.stderr.nl
+# The list of domains for which we handle mail ourselves
+domainlist local_domains = +virtual_domains : +real_domains
+
+# List of recipient domains to relay _to_. Use this list if you're -
+# for example - fallback MX or mail gateway for domains.
+domainlist relay_to_domains = 
+
+# Relay messages for all other containers and the host.
+hostlist relay_from_hosts = 10.42.0.0/24 : 127.0.0.1
+
+# Don't reject spam from these hosts, since they are known dumb, but trusted
+# relays. They will only send rejects to the wrong people.
+hostlist dont_reject_spam_hosts = *.utsp.utwente.nl : *.snt.utwente.nl
+
+# Let exim know how the rest of the world will try to reach us. The
+# stmp transport also uses this macro for its helo command and any
+# username@foo.local addresses will be rewritten to use this address instead.
+EXTERNAL_HOSTNAME = tika.stderr.nl
+hosts_treat_as_local = EXTERNAL_HOSTNAME
+
+# Use this domain on any unqualified addresses that get submitted. Since this
+# can come from any container, just use our main hostname.
+qualify_domain = EXTERNAL_HOSTNAME
+
+# The gecos field in /etc/passwd holds not only the name. see passwd(5).
+gecos_pattern = ^([^,:]*)
+gecos_name = $1
+
+# Defines the access control list that is run when an
+# SMTP MAIL command is received.
+acl_smtp_mail = acl_check_mail
+# Defines the access control list that is run when an
+# SMTP RCPT command is received.
+acl_smtp_rcpt = acl_check_rcpt
+# Defines the access control list that is run when an
+# SMTP DATA command is received.
+acl_smtp_data = acl_check_data
+
+
+# Do a reverse DNS lookup on all incoming IP calls, in order to get the
+# true host name.
+host_lookup = *
+
+# Queue handling
+#
+# Drop undeliverable bounces after this time
+ignore_bounce_errors_after = 2d
+# Bounce frozen messages after this time
+timeout_frozen_after = 7d
+# Tell postmaster about freezing
+freeze_tell = postmaster
+# Define spool directory
+spool_directory = /var/spool/exim4
+# Don't send out delivery delay warnings (by default once every 24h).
+delay_warning =
+
+# Log subjects, for easy tracing of messages and peer dn on TLS connections.
+# Don't log complete headers on rejects, that clutters the log.
+log_selector = +subject +tls_peerdn +tls_certificate_verified -rejected_header
+
+# vim: set sts=2 expandtab sw=2 ai:

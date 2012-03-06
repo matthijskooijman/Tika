@@ -1,0 +1,20 @@
+dovecot_deliver:
+  driver = pipe
+  # Tell deliver about the sender and recipient addresses. Deliver will look
+  # up the mailbox location itself. Note that we always use the primary mail
+  # address from the 'mail' attribute here, since deliver only knows about
+  # those.
+  command = /usr/lib/dovecot/deliver -e -f "$sender_address" -d "${extract{mail}{$address_data}}"
+
+  # Run under the virtual-mail user/group
+  user = virtual-mail
+
+  # Log (the first line of) any output generated
+  log_output
+
+  # Add some headers
+  delivery_date_add
+  envelope_to_add
+  return_path_add
+
+# vim: set sts=2 expandtab sw=2 ai:

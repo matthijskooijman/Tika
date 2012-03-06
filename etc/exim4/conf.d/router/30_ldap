@@ -1,0 +1,172 @@
+### router/30_ldap
+#################################
+
+# These routers deal with mail meant for virtual_domains and real_domains.
+# The targets for addresses in these domains and hosts are taken from
+# the LDAP server.
+#
+# The first router is used if the domain is in real_domains, to handle mail
+# addressed to local users (e.g., username@tika.stderr.nl). If the user does
+# not exist, processing stops there and then.
+#
+# The second router handles e-mail addresses assigned to groups and redirects
+# the message to all group members.
+#
+# The third router finds a MailIdentity based on the mail or
+# alternateMailAddress attributes. For example, info@stdin.nl might be
+# resolved by that one. 
+#
+# This third router doesn't actually do any routing, it just looks up the
+# object (whose properties get stored in $address_data) And then declines to
+# let the last three routers actually handle the delivery.
+#
+# If the address is not found by the third router, $address_data will remain
+# empty, all other routers will decline based on their precondition and then
+# delivery will fail.
+#
+# The last three routers works when an maroesjaMailIdentity
+# (maroesjaMailDeliverIdentity, maroesjaMailForwardIdentity or both)
+# maroesjaMailGroup) is retrieved. They handle forwarding the mail to another
+# mail server when the mailHost attribute is set but it is not us, forwarding
+# the email to any mailForwardingAddresses in the object or delivering the mail
+# locally when the mailHost is set to our hostname. Note that either or both
+# of the last two routers can apply.
+#
+# The routers in this file assume that the url to LDAP server is defined
+# as LDAPSERVER and the base dn is defined as LDAPBASE. No assumptions
+# are made about the structure of the LDAP directory, so any object that
+# has the mail or mailForwardingAddress attributes is considered a
+# valid target for email, anywhere in the directory. These routers do
+# assume that a single email address is listed only once. If not, mails
+# to the address will be deferred.
+
+# LDAP quoted localpart and full address
+Q_LOCALPART=${quote_ldap:${local_part}}
+Q_ADDR=${quote_ldap:${local_part}@${domain}}
+
+# This router looks up a maroesjaSystemIdentity in the ldap directory using its uid
+# (username) attribute, for any hosts in real_domains. Since this object is not
+# guaranteed to have an e-mail address, we use the mail attribute of the parent
+# object (which is the maroesjaPerson object the identity belongs to) to
+# forward the mail to.
+# The parent DN of the object looked up in the address_data query below
+PARENT_DN=${sg {$address_data} {^[^,]*,}{}}
+ldap_lookup_real:
+  debug_print = "R: ldap_lookup_real for $local_part@$domain: Finding user with uid $local_part"
+  driver = redirect
+  # If the domain is in real_domains
+  domains = +real_domains
+  # and the localpart refers to a local user
+  check_local_user
+  # and the localpart can be found as a uid (username) attribute on a
+  # SystemIdentity (can also be SystemLoginIdentity (whose dn we store in
+  # $address_data)
+  address_data = ${lookup ldapdn {LDAPURL??sub?(&(uid=Q_LOCALPART)(objectClass=maroesjaSystemIdentity))}{$value}fail}
+  # then look up the mail attribute of the parent object and forward the
+  # message to that address.
+  data = ${lookup ldap {LDAPSERVER/PARENT_DN?mail?base?(objectClass=maroesjaPerson)}{$value}fail}
+
+# Forward the mail to any members configured
+ADDR=${quote_ldap:${local_part}@${domain}}
+ldap_group_member:
+  debug_print = "R: ldap_group_member for $local_part@$domain: Forwarding to any members and rfc822members"
+  driver = redirect
+  # If the domain is in virtual_domains
+  domains = +virtual_domains
+  # and the mail address can be found as a mail attribute on a
+  # maroesjaMailGroup (whose attributes we store in $address_data)
+  address_data = ${lookup ldap {LDAPURL?rfc822member,member?sub?(&(|(mail=Q_ADDR)(mailAlternateAddress=Q_ADDR))(objectClass=maroesjaMailGroup))}{$value}fail}
+
+  # Then forward the message to any members of the group. First, look up the
+  # mail address (if any) of each member and append any rfc822members
+  # directly. This gracefully ignores any members without an email address.
+  data = ${map \
+    # Since multipe attributes are separated by ", ", we replace ", " by "\n"
+    # and use that as a list separator (fortunately it's not just ",", as the
+    # documentation suggests, since then we would have had one big dn...)
+    {<\n ${sg \
+      {${extract{member}{$address_data}}} \
+      {, } \
+      {\n} \
+    }} \
+    {${lookup ldap {LDAPSERVER/$item?mail?base?}}} \
+  }, ${extract{rfc822member}{$address_data}}
+
+# Router that looks up the maroesjaMailIdentity to which to deliver the
+# message, filling $address_data and then always fails. This allows the next
+# routers to do their work based on $address_data. If no LDAP object is found,
+# $address_data will be empty and all of the next routers preconditions will
+# fail.
+ldap_lookup_identity:
+  debug_print = "R: ldap_lookup_identity for $local_part@$domain"
+  driver = redirect
+  # If the domain is in virtual_domains
+  domains = +virtual_domains
+
+  # then look up a MailIdentity with the right mail or mailAlternateAddress attribute
+  address_data = ${lookup ldap {LDAPURL?mail,mailHost,mailForwardingAddress?sub?(&(|(mail=ADDR)(mailAlternateAddress=ADDR))(objectClass=maroesjaMailIdentity))}}
+  # and always decline
+  data = 
+
+# If the person has a mailhost configured, and it's not us, forward to
+# that mailhost. If this router accepts, no others will be tried. This
+# means we're also not processing any mailForwardingAddresses, assuming
+# that the host forwarded to will do this.
+#
+# This entry is mostly future-compatible, since at the time of writing
+# there are no other mailservers using the same LDAP directory. But it
+# looks cool!
+ldap_person_other_mailhost:
+  debug_print = "R: ldap_person_other_mailhost for $local_part@$domain: Forwarding to a mailHost if it is not us"
+  driver = manualroute
+  condition = ${if and { \
+    # If the ldap lookup returned data
+    {!eqi {$address_data} {}} \
+    # and mailhost is not empty
+    {!eqi {${extract{mailHost}{$address_data}}} {} } \
+    # and mailhost is not this host
+    {!eqi {${extract{mailHost}{$address_data}}} {EXTERNAL_HOSTNAME}} \
+  }}
+
+  # Then, forward to the other mailHost
+  route_data = ${extract{mailHost}{$address_data}}
+  transport = remote_smtp
+
+DELIVER_HERE=eqi{${extract{mailHost}{$address_data}}}{EXTERNAL_HOSTNAME}
+# Forward the mail to any mailForwardingAddresses configured
+ldap_forwarding_address:
+  debug_print = "R: ldap_person_forward for $local_part@$domain: Forwarding to any mailForwardingAddresses"
+  driver = redirect
+  # If the ldap lookup returned data
+  condition = $address_data
+
+  # then forward the message to any mailForwardingAddresses. Multiple
+  # attributes are already comma-separated by the ldap lookup. If there are no
+  # forwardingAddresses, this router will decline and the next router will be
+  # tried.
+  data = ${extract{mailForwardingAddress}{$address_data}}
+
+  # If this router accepted the message, pass the message to the
+  # ldap_deliver_local router as well, so we can support both local delivery
+  # and forwarding. However, only set unseen to yes if we know the
+  # ldap_deliver_local will accept it.  Just putting unseen = yes here doesn't
+  # work because if there is no local delivery, an error message is generated
+  # even when the email was forwarded succesfully.
+  unseen = ${if DELIVER_HERE {true}{false}}
+
+# Deliver the mail locally if the mailHost points to us.
+ldap_deliver_local:
+  debug_print = "R: ldap_deliver_local for $local_part@$domain: Doing local delivery if the mailHost is us"
+  driver = accept
+
+  condition = ${if and { \
+    # If the ldap lookup returned data
+    {!eqi {$address_data} {}} \
+    # and the mailHost attribute points to us
+    {DELIVER_HERE} \
+  }}
+
+  # then use dovecot-deliver to deliver this message locally
+  transport = dovecot_deliver
+
+# vim: set sts=2 expandtab sw=2 ai:

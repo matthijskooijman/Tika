@@ -1,0 +1,14 @@
+### router/400_exim4-config_system_aliases
+#################################
+
+# This router handles aliasing using a traditional /etc/aliases file, but for
+# local hosts only. Virtual domains must take own measures to ensure that the
+# postmaster address works.
+
+system_aliases:
+  debug_print = "R: system_aliases for $local_part@$domain"
+  driver = redirect
+  domains = +real_domains
+  data = ${lookup{$local_part}lsearch{/etc/aliases}}
+
+# vim: set sts=2 expandtab sw=2 ai:

@@ -1,0 +1,14 @@
+
+######################################################################
+#                      TRANSPORTS CONFIGURATION                      #
+######################################################################
+#                       ORDER DOES NOT MATTER                        #
+#     Only one appropriate transport is called for each delivery.    #
+######################################################################
+
+# A transport is used only when referenced from a router that successfully
+# handles an address.
+
+begin transports
+
+# vim: set sts=2 expandtab sw=2 ai:
