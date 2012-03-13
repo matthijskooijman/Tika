@@ -26,7 +26,11 @@ SOCKET="--socketpath=/var/run/spamd.socket --socketowner=nobody --socketgroup=sp
 # users (usernames are name@domain.tld), this dropping never works and spamd
 # falls back to using nobody already. So we give -u here to just skip the
 # entire dropping business and just run as nobody from the start.
-OPTIONS="--create-prefs --max-children 5 -u nobody $SOCKET"
+#
+# Use --allow-tell to allow training messages using spamc. This removes the
+# need for complex permission settings on the bayes database files, since now
+# only spamd needs to access the bayes database.
+OPTIONS="--create-prefs --max-children 5 -u nobody --allow-tell $SOCKET"
 
 # Pid file
 # Where should spamd write its PID to file? If you use the -u or
