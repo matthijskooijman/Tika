@@ -5,7 +5,7 @@
 # There may be security risks.
 
 # Change to one to enable spamd
-ENABLED=0
+ENABLED=1
 
 # Options
 # See man spamd for possible options. The -d option is automatically added.
