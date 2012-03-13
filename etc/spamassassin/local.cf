@@ -37,6 +37,17 @@ report_safe 0
 # use_bayes 1
 
 
+#   Use a global Bayes database, shared among all users. Note that this is
+#   (part of) a filename, the actual files to store data in will be generated
+#   by appending "_seen" and "_toks" to this string.
+#
+#   The directory specified in this path (so "spamassassin", not "bayes")
+#   should be precreated and be writable to the user running spamd (nobody).
+bayes_path /data/mail/spamassassin/bayes
+
+
+
+
 #   Bayesian classifier auto-learning (default: 1)
 #
 # bayes_auto_learn 1
