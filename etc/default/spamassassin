@@ -20,7 +20,13 @@ SOCKET="--socketpath=/var/run/spamd.socket --socketowner=nobody --socketgroup=sp
 # SpamAssassin uses a preforking model, so be careful! You need to
 # make sure --max-children is not set to anything higher than 5,
 # unless you know what you're doing.
-OPTIONS="--create-prefs --max-children 5 --helper-home-dir $SOCKET"
+#
+# Use -u nobody to always make spamd run as nobody. The default is to run as
+# root and drop to the username given by the client. Since we don't use real
+# users (usernames are name@domain.tld), this dropping never works and spamd
+# falls back to using nobody already. So we give -u here to just skip the
+# entire dropping business and just run as nobody from the start.
+OPTIONS="--create-prefs --max-children 5 -u nobody $SOCKET"
 
 # Pid file
 # Where should spamd write its PID to file? If you use the -u or
