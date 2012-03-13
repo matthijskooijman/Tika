@@ -10,11 +10,17 @@ ENABLED=1
 # Options
 # See man spamd for possible options. The -d option is automatically added.
 
+# Instead of using a TCP socket, listen on a UNIX socket. This allows us to
+# limit access to specific users (to prevent all users from being able to use
+# the TELL command to learn new spam/ham messages). By allowing access to the
+# spamd-access group, specific users (i.e., the users exim and dovecot are
+# running as) are given permission.
+SOCKET="--socketpath=/var/run/spamd.socket --socketowner=nobody --socketgroup=spamd-access --socketmode=0660"
+
 # SpamAssassin uses a preforking model, so be careful! You need to
 # make sure --max-children is not set to anything higher than 5,
 # unless you know what you're doing.
-
-OPTIONS="--create-prefs --max-children 5 --helper-home-dir"
+OPTIONS="--create-prefs --max-children 5 --helper-home-dir $SOCKET"
 
 # Pid file
 # Where should spamd write its PID to file? If you use the -u or

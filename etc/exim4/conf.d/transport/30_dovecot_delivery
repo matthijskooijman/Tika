@@ -1,6 +1,6 @@
 dovecot_deliver:
   driver = pipe
-  transport_filter = /usr/bin/spamc -u "${extract{mail}{$address_data}}"
+  transport_filter = /usr/bin/spamc -u "${extract{mail}{$address_data}}" --socket=/var/run/spamd.socket
 
   # Tell deliver about the sender and recipient addresses. Deliver will look
   # up the mailbox location itself. Note that we always use the primary mail

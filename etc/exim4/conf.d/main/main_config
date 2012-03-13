@@ -52,6 +52,7 @@ acl_smtp_rcpt = acl_check_rcpt
 # SMTP DATA command is received.
 acl_smtp_data = acl_check_data
 
+spamd_address = /var/run/spamd.socket
 
 # Do a reverse DNS lookup on all incoming IP calls, in order to get the
 # true host name.
