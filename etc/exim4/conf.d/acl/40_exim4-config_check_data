@@ -15,27 +15,38 @@ acl_check_data:
     message = Message headers fail syntax check
     !verify = header_syntax
 
-  accept
 
-  # Don't spamcheck big messages
-  accept
-    condition = ${if >{$message_size}{80k}}
-    add_header = X-Spam-Score: Message too big, not scanned.
+  # Entries below this all refer to the spamchecking (so add new entries above).
 
-  # Deny messages with a large spamscore. The threshold is set by
-  # spamassassin, see required_score in /etc/spamassassin/local.cf
+
+  # Don't do spamchecking for a list of "trusted" hosts (we know these hosts to
+  # not be spammers, so if we still receive spam from them, it's too late to
+  # reject it).
+  accept
+    hosts = +dont_reject_spam_hosts
+    add_header = X-Preliminary-Spam-Score: Not scanned; message from trusted host
+
+  # Don't do spamchecking for big messages, they're unlikely to be spam and
+  # cost a lot of resources.
+  accept
+    condition = ${if >{$message_size}{20k}}
+    add_header = X-Preliminary-Spam-Score: Not scanned; message too big
+
+  # Use spamassassin to scan messages so we can reject them at SMTP time. This
+  # entry just does the check and adds the header, the next entry denies the
+  # message if needed. 
+  # We pass a  username of "nobody" to make spamassassin use the global
+  # defaults instead of any user's specific settings.
+  warn
+    spam = nobody:true
+    add_header = X-Preliminary-Spam-Score: $spam_score ($spam_bar)
+
+  # Deny messages that are really obvious spam (>12 score)
   deny
+    condition = ${if >{$spam_score_int}{120}}
     message = Message was classified as spam
-    # Check using spamassasin, running as the "spamd" user.
-    spam = spamd
-    # Don't reject to some trusted hosts, since they will only generate
-    # useless delivery failures to innocent people. We check this after the
-    # spamcheck, so the next rule can still set the spam headers properly.
-    !hosts = +dont_reject_spam_hosts
 
-  # Accept any other messages, but add spam headers.
+  # Accept any other messages
   accept
-    add_header = X-Spam-Score: $spam_score ($spam_bar)
-    add_header = X-Spam-Report: $spam_report
 
 # vim: set sts=2 expandtab sw=2 ai:
