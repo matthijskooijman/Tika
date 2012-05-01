@@ -331,3 +331,14 @@ objectclass ( StdErrObjectClass:13
 	MUST ( uniqueIdentifier $ owner $ domainName $ displayName )
 	MAY ( description ) )
 
+# A system account or group (e.g., the account that dovecot uses to access
+# mails). This is used for accounts and groups that should not be managed using
+# Maroesja, but are created in the LDAP directory manually.
+#
+# Add maroesjaSystemIdentity and/or maroesjaSystemGroup to actually turn this
+# into a user and/or group.
+objectclass ( StdErrObjectClass:14
+	NAME 'maroesjaSystemAccount'
+	SUP top
+	STRUCTURAL
+	MUST ( uniqueIdentifier $ displayName) )
