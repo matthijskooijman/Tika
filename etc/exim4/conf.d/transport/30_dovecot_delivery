@@ -10,6 +10,8 @@ dovecot_deliver:
 
   # Run under the virtual-mail user/group
   user = virtual-mail
+  # Initialize supplementary groups (spamd-access in this case)
+  initgroups = true
 
   # Log (the first line of) any output generated
   log_output
