@@ -30,7 +30,10 @@ SOCKET="--socketpath=/var/run/spamd.socket --socketowner=nobody --socketgroup=sp
 # Use --allow-tell to allow training messages using spamc. This removes the
 # need for complex permission settings on the bayes database files, since now
 # only spamd needs to access the bayes database.
-OPTIONS="--create-prefs --max-children 5 -u nobody --allow-tell $SOCKET"
+#
+# Use --nouser-config to not try to load configs from homedirs ("users" are not
+# system users usually) and --sql-config to load preferences from SQL instead.
+OPTIONS="--create-prefs --max-children 5 -u nobody --allow-tell $SOCKET --nouser-config --sql-config"
 
 # Pid file
 # Where should spamd write its PID to file? If you use the -u or
