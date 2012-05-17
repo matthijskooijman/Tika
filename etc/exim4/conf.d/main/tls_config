@@ -1,0 +1,6 @@
+# Advertise STARTTLS capability to all clients
+tls_advertise_hosts = *
+
+# Use the dovecot self-signed ceritificates for now
+tls_certificate = /etc/ssl/certs/dovecot.pem
+tls_privatekey = /etc/ssl/private/dovecot.pem
