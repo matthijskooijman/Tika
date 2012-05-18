@@ -4,3 +4,10 @@ tls_advertise_hosts = *
 # Use the dovecot self-signed ceritificates for now
 tls_certificate = /etc/ssl/certs/dovecot.pem
 tls_privatekey = /etc/ssl/private/dovecot.pem
+
+# Use SMTPS (i.e., TLS from the start instead of using STARTTLS) on port 465.
+# This protocol is really deprecated, but some Outlook versions might need it
+# (it seems Outlook 2003 only supports STARTTLS on port 25, but that port is be
+# blocked by a lot of ISPs, so SMTPS is the only way to do secure SMTP for thos
+# clients).
+tls_on_connect_ports = 465
