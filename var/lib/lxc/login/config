@@ -1,0 +1,71 @@
+# Hostname
+lxc.utsname = login.local
+
+# Use this root filesystem
+lxc.rootfs = /containers/login
+
+# Log console output
+lxc.console = /var/log/lxc/login.lxc
+
+# The container gets a single virtual eth0 interface with a statically assigned
+# address (assigned by lxc-start, no need for the container to assign any
+# address itself).
+lxc.network.type = veth
+lxc.network.flags = up
+lxc.network.veth.pair = lxc-login
+lxc.network.name = eth0
+lxc.network.link = br-lxc
+lxc.network.ipv4 = 10.42.0.16/24
+lxc.network.ipv4.gateway = auto
+
+# The number of ttys available (shouldn't be less than the getty's
+# configured in the inittab).
+lxc.tty = 4
+
+# Use private pts for the container
+lxc.pts = 256
+
+# Deny all devices, except the following
+lxc.cgroup.devices.deny = a
+# /dev/null
+lxc.cgroup.devices.allow = c 1:3 rwm
+# /dev/zero
+lxc.cgroup.devices.allow = c 1:5 rwm
+# /dev/console
+lxc.cgroup.devices.allow = c 5:1 rwm
+# /dev/tty
+lxc.cgroup.devices.allow = c 5:0 rwm
+# /dev/tty0
+lxc.cgroup.devices.allow = c 4:0 rwm
+# /dev/tty1
+lxc.cgroup.devices.allow = c 4:1 rwm
+# /dev/{,u}random
+lxc.cgroup.devices.allow = c 1:9 rwm
+lxc.cgroup.devices.allow = c 1:8 rwm
+# /dev/pts/0 - /dev/pts/255
+lxc.cgroup.devices.allow = c 136:* rwm
+# /dev/ptmx
+lxc.cgroup.devices.allow = c 5:2 rwm
+# rtc
+lxc.cgroup.devices.allow = c 254:0 rwm
+
+# mounts (note that the second item in each list is the mount point, relative
+ to the rootfs)
+lxc.mount.entry=proc proc proc nodev,noexec,nosuid 0 0
+lxc.mount.entry=sysfs sys sysfs defaults  0 0
+lxc.mount.entry=/data/users data/users none defaults,bind 0 0
+lxc.mount.entry=/etc/skel etc/skel none defaults,bind,ro 0 0
+
+# Disallow module (un)loading
+lxc.cap.drop = sys_module
+# Disallow doing raw io
+lxc.cap.drop = sys_rawio
+# Disallow changing the clock
+lxc.cap.drop = sys_time
+# Disallow changing network settings
+lxc.cap.drop = net_admin
+# Disallow changing auditing settings
+lxc.cap.drop = audit_control
+# Disallow various admin tasks (probably has side-effects)
+lxc.cap.drop = sys_admin
+# sys_boot is always dropped by lxc-start
