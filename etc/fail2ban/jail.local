@@ -1,2 +1,10 @@
 [DEFAULT]
 chain = PRE-VRMR-FORWARD
+
+[ssh]
+enable = true
+logpath = /data/log/rsyslog/all.log
+
+[dovecot]
+enable = true
+logpath = /data/log/rsyslog/all.log
