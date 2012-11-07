@@ -181,7 +181,7 @@ $GIT push origin "$TARGET:$TARGET"
 # Commit the configuration
 echo "Commiting configuration for container '$TARGET'"
 (cd /; sudo git add "$TARGET_CONF")
-(cd /; sudo git commit "$TARGET_CONF" --edit --message "lxc: Add $TARGET container configuration")
+(cd /; sudo git commit "$TARGET_CONF" --edit --message "lxc: Add $TARGET container configuration") || true
 
 echo "Finished creating container '$TARGET'"
 echo "You can now start it using 'lxc-start -d -n $TARGET' and then"
