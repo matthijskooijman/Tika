@@ -1,0 +1,186 @@
+#!/bin/sh
+
+# The dir containing vserver configuration
+LXC_DIR=/var/lib/lxc
+
+# The vserver to use as a template
+TEMPLATE=$1
+TARGET=$2
+
+TEMPLATE_CONF="$LXC_DIR/$TEMPLATE/config"
+TARGET_CONFDIR="$LXC_DIR/$TARGET/"
+TARGET_CONF="$TARGET_CONFDIR/config"
+TARGET_HOSTNAME="$TARGET.local"
+
+# Exit on errors
+set -e 
+
+usage()
+{
+	echo "Usage: $0 template newname"
+	echo "Creates a new container with the specified name, which is a clone"
+	echo "from the specified template container with some post-processing done."
+}
+
+find_ip()
+{
+	for i in `seq 10 254`; do
+		IP=${IP_RANGE}$i
+        # Check to see if the address is configured on a guest
+        if grep -E "^lxc\\.network\\.ipv4 *= *$IP(\$|[^0-9])" "$LXC_DIR"/*/config >/dev/null 2>/dev/null; then
+            continue
+        fi
+        # Check to see if the address is active
+        if ping -w 3 -c 1 -n "$IP" >/dev/null 2>/dev/null; then
+            continue
+		fi
+
+        return 0
+	done
+	return 1
+}
+
+if [ "`id -u`" -eq 0 ]; then
+	echo "$0 should not be run as root, it will use sudo where appropriate"
+	exit 1
+fi
+
+# Check arguments
+if [ ! "$#" -eq 2 ]; then
+	usage
+	exit 1
+fi
+
+
+if [ ! -f "$TEMPLATE_CONF" ]; then
+    echo "(configuration for) template container '$TEMPLATE' not found?"
+    exit 1;
+fi;
+
+if ! echo "$TARGET" | grep "^[a-zA-Z0-9-]*$" >/dev/null 2>/dev/null; then
+	echo "Name can only contain alphanumerics and dashes"
+	exit 1
+fi
+
+if [ -e "$TARGET_CONF" ]; then
+        echo "Can't create container configuration, file '$TARGET_CONF' already exists"
+        exit 1
+fi
+
+if ! ssh-add -l >/dev/null 2>/dev/null; then
+        echo "Can't connect to your SSH agent (we'll need it to push the git repository at the end)."
+        exit 1
+fi
+
+# Create config
+echo "Creating container '$TARGET' configuration..."
+sudo mkdir -p "`dirname $TARGET_CONF`"
+sudo cp "$TEMPLATE_CONF" "$TARGET_CONF"
+
+# Replace the container name in the configuratoin
+sudo sed -i "s/$TEMPLATE/$TARGET/g" "$TARGET_CONF"
+
+echo "Finding IP address(es) for container '$TARGET'..."
+IPS=`grep '^lxc\.network\.ipv4 *=' "$TEMPLATE_CONF" | sed -r 's/lxc\.network\.ipv4 *= *([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+).*/\1/'`
+for TEMPLATE_IP in $IPS; do
+    IP_RANGE=`echo "$TEMPLATE_IP" | sed -r 's/\.[0-9]+$/\./'`
+    if ! find_ip; then
+        echo "No available ip address found to replace $TEMPLATE_IP, aborting"
+        exit 1
+    fi;
+    echo "Replacing IP '$TEMPLATE_IP' with '$IP'"
+
+    sudo sed -i "s/$TEMPLATE_IP/$IP/" "$TARGET_CONF"
+done
+
+TEMPLATE_ROOTFS=`grep '^lxc.rootfs *=' "$TEMPLATE_CONF" | sed 's/lxc.rootfs *= *//'`
+TARGET_ROOTFS=`grep '^lxc.rootfs *=' "$TARGET_CONF" | sed 's/lxc.rootfs *= *//'`
+
+if [ -z "$TEMPLATE_ROOTFS" ]; then
+    echo "No rootfs defined in template config ('$TEMPLATE_CONF')?";
+    sudo rm "$TARGET_CONF"
+    exit 1;
+fi
+
+if [ ! -e "$TEMPLATE_ROOTFS" ]; then
+    echo "Template rootfs ('$TEMPLATE_ROOTFS') does not exist?";
+    sudo rm "$TARGET_CONF"
+    exit 1;
+fi
+
+if [ "$TEMPLATE_ROOTFS" = "$TARGET_ROOTFS" ]; then
+    echo "Template container name was not present in its rootfs path ('$TEMPLATE_ROOTFS'), cannot copy the rootfs."
+    sudo rm "$TARGET_CONF"
+    exit 1;
+fi
+
+if [ -e "$TARGET_ROOTFS" ]; then
+        echo "Can't create container rootfs, directory ('$TARGET_ROOTFS') already exists"
+        sudo rm "$TARGET_CONF"
+        exit 1
+fi
+
+echo "Creating container '$TARGET' rootfs, this may take a while..."
+
+sudo mkdir -p "`dirname $TARGET_ROOTFS`"
+
+# Copy the rootfs, but exclude state data
+sudo rsync --one-file-system --archive --hard-links --acls --xattrs --exclude-from=- "$TEMPLATE_ROOTFS/" "$TARGET_ROOTFS" <<EOF
+/etc/ssh/*key*
+/tmp/*
+/var/tmp/*
+/var/spool/*/*
+/var/run/*
+/var/log/*
+EOF
+
+# Create a link to the rootfs from the container config directory to keep
+# scripts (like lxc-halt) happy.
+sudo ln -s "$TARGET_ROOTFS" "`dirname $TARGET_CONF`/rootfs"
+
+echo "Rootfs created, configuring..."
+
+# Note that this lxc-execute needs the lxc tools installed in the container, so
+# lxc-init is available inside...
+# Don't use lxc-execute, since lxc-init tries to mount procfs inside the
+# container, which doesn't work without cap_sys_admin.
+#INSIDE="sudo lxc-execute -n $TARGET --" 
+
+INSIDE="sudo chroot $TARGET_ROOTFS" 
+
+# Replace the container name in the mailname
+for file in etc/mailname etc/hostname; do
+    sudo sed -i "s/$TEMPLATE/$TARGET/" "$TARGET_ROOTFS/$file"
+done
+
+echo "Regenerating SSH keys..."
+# Regen ssh keys (and prevent sshd from starting, since that prevents
+# lxc-execute from returning...
+sudo touch "$TARGET_ROOTFS/etc/ssh/sshd_not_to_be_run"
+$INSIDE dpkg-reconfigure openssh-server
+sudo rm "$TARGET_ROOTFS/etc/ssh/sshd_not_to_be_run"
+
+echo "Setting up git inside container '$TARGET'"
+
+# Explicitly pass --work-tree to git, since repositories in root get (need?)
+# the core.worktree=/ variable set.
+GIT="sudo git --work-tree=$TARGET_ROOTFS"
+
+# There is a git repository inside the rootfs
+cd "$TARGET_ROOTFS" 
+# Setup git - Add a branch for this container
+$GIT branch "$TARGET" "origin/$TEMPLATE"
+$GIT checkout "$TARGET"
+# Remove the template branch, to prevent pushing it back later on 
+$GIT branch -D "$TEMPLATE"
+# Push our new branch upstream so it can be pushed with "git push" afterwards.
+$GIT push origin "$TARGET:$TARGET"
+
+# Commit the configuration
+echo "Commiting configuration for container '$TARGET'"
+(cd /; sudo git add "$TARGET_CONF")
+(cd /; sudo git commit "$TARGET_CONF" --edit --message "lxc: Add $TARGET container configuration")
+
+echo "Finished creating container '$TARGET'"
+echo "You can now start it using 'lxc-start -d -n $TARGET' and then"
+echo "connect to its console using 'lxc-console -n $TARGET'"
