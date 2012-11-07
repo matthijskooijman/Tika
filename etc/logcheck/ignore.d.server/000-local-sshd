@@ -1,0 +1,2 @@
+sshd\[[0-9]*\]: Received disconnect from [0-9.]*: 11: disconnected by user$
+sshd\[[0-9]*\]: Failed password for root from [0-9.]* port [0-9]* ssh2$

@@ -1,0 +1,1 @@
+slapd\[[0-9]+\]: connection_read\([0-9]*\): no connection!$
