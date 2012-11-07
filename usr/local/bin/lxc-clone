@@ -129,6 +129,8 @@ sudo rsync --one-file-system --archive --hard-links --acls --xattrs --filter="me
 exclude /etc/ssh/*key*
 exclude /tmp/*
 exclude /var/tmp/*
+include /var/spool/nullmailer/*
+exclude /var/spool/nullmailer/*/*
 exclude /var/spool/*/*
 exclude /var/run/*
 exclude /var/log/*
