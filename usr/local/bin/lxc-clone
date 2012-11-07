@@ -125,13 +125,13 @@ echo "Creating container '$TARGET' rootfs, this may take a while..."
 sudo mkdir -p "`dirname $TARGET_ROOTFS`"
 
 # Copy the rootfs, but exclude state data
-sudo rsync --one-file-system --archive --hard-links --acls --xattrs --exclude-from=- "$TEMPLATE_ROOTFS/" "$TARGET_ROOTFS" <<EOF
-/etc/ssh/*key*
-/tmp/*
-/var/tmp/*
-/var/spool/*/*
-/var/run/*
-/var/log/*
+sudo rsync --one-file-system --archive --hard-links --acls --xattrs --filter="merge -" "$TEMPLATE_ROOTFS/" "$TARGET_ROOTFS" <<EOF
+exclude /etc/ssh/*key*
+exclude /tmp/*
+exclude /var/tmp/*
+exclude /var/spool/*/*
+exclude /var/run/*
+exclude /var/log/*
 EOF
 
 # Create a link to the rootfs from the container config directory to keep
