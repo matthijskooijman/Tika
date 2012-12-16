@@ -1,5 +1,4 @@
-deb http://ftp.nl.debian.org/debian squeeze main
 deb http://ftp.nl.debian.org/debian wheezy main
-deb http://backports.debian.org/debian-backports squeeze-backports main
+deb http://ftp.nl.debian.org/debian sid main
 
 deb http://apt.stderr.nl stderr main

@@ -1,0 +1,4 @@
+# /etc/skel is bindmounted from the host, to prevent needing to update every
+# container separately. This line prevents dpkg from trying to update the
+# (readonly) /etc/skel
+path-exclude=/etc/skel/*
