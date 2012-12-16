@@ -1,4 +1,4 @@
 # /etc/default/lxc
 
 LXC_AUTO="true"
-LXC_DIRECTORY="/var/lib/lxc"
+LXC_DIRECTORY="/etc/lxc"
