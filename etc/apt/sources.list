@@ -1,4 +1,4 @@
-deb http://ftp.nl.debian.org/debian wheezy main
-deb http://ftp.nl.debian.org/debian sid main
+deb http://ftp.nl.debian.org/debian wheezy main contrib non-free
+deb http://ftp.nl.debian.org/debian sid main contrib non-free
 
 deb http://apt.stderr.nl stderr main
