@@ -1,0 +1,5 @@
+# Ignore this file from the bash-completion file, since it does not work for
+# non-login sessions (see Debian #678174). Instead of relying on this file,
+# bash-completion is enabled in /etc/skel/.bashrc, with the added advantage
+# that users can disable it if they want.
+path-exclude=/etc/profile.d/bash_completion.sh
