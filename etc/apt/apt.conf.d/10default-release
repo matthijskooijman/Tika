@@ -1,1 +1,1 @@
-APT::Default-Release "squeeze";
+APT::Default-Release "wheezy";
