@@ -134,7 +134,7 @@ exclude /var/spool/nullmailer/*/*
 include /var/spool/cron/at*
 exclude /var/spool/cron/at*/*
 exclude /var/spool/*/*
-exclude /var/run/*
+exclude /run/*
 exclude /var/log/*
 EOF
 
