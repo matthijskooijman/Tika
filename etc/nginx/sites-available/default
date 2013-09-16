@@ -16,3 +16,5 @@ server {
 		# include /etc/nginx/naxsi.rules
 	}
 }
+
+# vim: set ts=8 sts=8 sw=8 noexpandtab filetype=conf:
