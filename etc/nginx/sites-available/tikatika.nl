@@ -14,7 +14,7 @@ server {
 		include uwsgi_params;
 		uwsgi_param SCRIPT_NAME	$1;
 		uwsgi_param PATH_INFO $2;
-                uwsgi_pass unix:///var/run/uwsgi/tikatika.nl-moinmoin.socket;
+                uwsgi_pass unix:///run/uwsgi/tikatika.nl/app-moinmoin.socket;
         }
 }
 
