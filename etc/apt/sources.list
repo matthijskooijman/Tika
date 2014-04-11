@@ -7,5 +7,7 @@ deb-src http://security.debian.org/ wheezy/updates main contrib non-free
 deb http://ftp.nl.debian.org/debian/ sid main non-free contrib
 deb-src http://ftp.nl.debian.org/debian/ sid main non-free contrib
 
+deb ftp://ftp.vuurmuur.org/debian/ wheezy svn
+
 # Our own custom repository
 deb http://apt.stderr.nl stderr main
