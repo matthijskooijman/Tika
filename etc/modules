@@ -5,3 +5,9 @@
 # Parameters can be specified after the module name.
 
 loop
+
+# These need to be manually loaded, for some reason
+# https://bugs.launchpad.net/ubuntu/+source/ipmitool/+bug/908112
+ipmi_devintf
+ipmi_si
+ipmi_msghandler
