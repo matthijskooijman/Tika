@@ -13,5 +13,5 @@ OIDENT_GROUP=oident
 # this is needed behind a masquarading router that runs oidentd -f
 # if your identd proxy is not the default router, you have to
 # manually specify it via -P
-OIDENT_BEHIND_PROXY=no
+OIDENT_BEHIND_PROXY=yes
 
