@@ -201,12 +201,14 @@ objectclass ( StdErrObjectClass:2
 # single identity to use both mailForwardIdentity and
 # mailDeliverIdentity when mail should be delivered as well as
 # forwarded.
+# Also note that both mail and mailAlternateAddress are optional. This allows
+# for having an identity that has no public email addresses of its own, but
+# receives its mail through group memberships only.
 objectclass ( StdErrObjectClass:3
 	NAME 'maroesjaMailIdentity'
 	SUP top
 	ABSTRACT
-	MUST ( mail )
-	MAY ( mailAlternateAddress ) )
+	MAY ( mail $ mailAlternateAddress ) )
 
 # Mail for this identity should be forwarded to some other address (or
 # addresses). This is typically an external email address (e.g. gmail),
@@ -245,6 +247,8 @@ objectclass ( StdErrObjectClass:5
 # Login-less users can be useful as users to run webapplications under,
 # for example,
 #
+# In addition to a user, this object also represents its own primary group.
+#
 # Note that there is no gecos property, libnss-ldap is configured to use
 # displayName for that (which isn't technically correct, since gecos can
 # contain multiple comma-separated values, but who uses the extra info
@@ -253,7 +257,7 @@ objectclass ( StdErrObjectClass:6
 	NAME 'maroesjaSystemIdentity'
 	SUP top
 	AUXILIARY
-	MUST ( uid $ uidNumber $ gidNumber $ homeDirectory )
+	MUST ( uid $ cn $ uidNumber $ gidNumber $ homeDirectory )
 	MAY ( ) )
 
 # This identity represents a Linux system user that should be able to
