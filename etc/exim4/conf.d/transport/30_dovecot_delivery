@@ -8,7 +8,7 @@ dovecot_deliver:
   # up the mailbox location itself. Note that we always use the primary mail
   # address from the 'mail' attribute here, since deliver only knows about
   # those.
-  command = /usr/lib/dovecot/deliver -e -f "$sender_address" -d "${extract{mail}{$address_data}}"
+  command = /usr/lib/dovecot/deliver -e -f "$sender_address" -d "${extract{uniqueIdentifier}{$address_data}}"
 
   # Run under the virtual-mail user/group
   user = virtual-mail

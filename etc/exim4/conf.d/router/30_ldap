@@ -96,7 +96,7 @@ ldap_lookup_identity:
   domains = +virtual_domains
 
   # then look up a MailIdentity with the right mail or mailAlternateAddress attribute
-  address_data = ${lookup ldap {LDAPURL?mail,mailHost,mailForwardingAddress?sub?(&(|(mail=Q_ADDR)(mailAlternateAddress=Q_ADDR))(objectClass=maroesjaMailIdentity))}}
+  address_data = ${lookup ldap {LDAPURL?mail,mailHost,mailForwardingAddress,uniqueIdentifier?sub?(&(|(mail=Q_ADDR)(mailAlternateAddress=Q_ADDR))(objectClass=maroesjaMailIdentity))}}
   # and always decline
   data = 
 
