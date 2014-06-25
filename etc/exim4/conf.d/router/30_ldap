@@ -42,7 +42,6 @@
 
 # LDAP quoted localpart and full address
 Q_LOCALPART=${quote_ldap:${local_part}}
-Q_ADDR=${quote_ldap:${local_part}@${domain}}
 
 # This router looks up a maroesjaSystemIdentity in the ldap directory using its uid
 # (username) attribute, for any hosts in real_domains. Since this object is not
@@ -67,7 +66,7 @@ ldap_lookup_real:
   data = ${lookup ldap {LDAPSERVER/PARENT_DN?mail?base?(objectClass=maroesjaPerson)}{$value}fail}
 
 # Forward the mail to any members configured
-ADDR=${quote_ldap:${local_part}@${domain}}
+Q_ADDR=${quote_ldap:${local_part}@${domain}}
 ldap_group_member:
   debug_print = "R: ldap_group_member for $local_part@$domain: Forwarding to any members and rfc822members"
   driver = redirect
@@ -104,7 +103,7 @@ ldap_lookup_identity:
   domains = +virtual_domains
 
   # then look up a MailIdentity with the right mail or mailAlternateAddress attribute
-  address_data = ${lookup ldap {LDAPURL?mail,mailHost,mailForwardingAddress?sub?(&(|(mail=ADDR)(mailAlternateAddress=ADDR))(objectClass=maroesjaMailIdentity))}}
+  address_data = ${lookup ldap {LDAPURL?mail,mailHost,mailForwardingAddress?sub?(&(|(mail=Q_ADDR)(mailAlternateAddress=Q_ADDR))(objectClass=maroesjaMailIdentity))}}
   # and always decline
   data = 
 
