@@ -1,7 +1,10 @@
 # This is the global sieve script for users without their own sieve scripts. If
 # you edit this file, be sure to recompile it be running:
 #
-#   $ sudo sievec /etc/dovecot/sieve/default
+#   $ sudo sievec -c /dev/null /etc/dovecot/sieve/default
+#
+# -c /dev/null is to prevent sievec from dropping privileges. This is fixed in
+# dovecot 2.1.9, see http://dovecot.org/pipermail/dovecot/2014-June/096737.html
 #
 # You'll also need to edit this same file in the web.local container, which
 # should be identical to this file (minus this comment) and is used by
