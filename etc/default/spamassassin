@@ -17,10 +17,6 @@ ENABLED=1
 # running as) are given permission.
 SOCKET="--socketpath=/var/run/spamd.socket --socketowner=nobody --socketgroup=spamd-access --socketmode=0660"
 
-# SpamAssassin uses a preforking model, so be careful! You need to
-# make sure --max-children is not set to anything higher than 5,
-# unless you know what you're doing.
-#
 # Use -u nobody to always make spamd run as nobody. The default is to run as
 # root and drop to the username given by the client. Since we don't use real
 # users (usernames are name@domain.tld), this dropping never works and spamd
@@ -33,7 +29,7 @@ SOCKET="--socketpath=/var/run/spamd.socket --socketowner=nobody --socketgroup=sp
 #
 # Use --nouser-config to not try to load configs from homedirs ("users" are not
 # system users usually) and --sql-config to load preferences from SQL instead.
-OPTIONS="--create-prefs --max-children 5 -u nobody --allow-tell $SOCKET --nouser-config --sql-config"
+OPTIONS="--create-prefs --max-children 10 -u nobody --allow-tell $SOCKET --nouser-config --sql-config"
 
 # Pid file
 # Where should spamd write its PID to file? If you use the -u or
