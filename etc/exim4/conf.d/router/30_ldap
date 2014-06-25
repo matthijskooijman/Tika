@@ -109,7 +109,7 @@ ldap_lookup_identity:
 # there are no other mailservers using the same LDAP directory. But it
 # looks cool!
 ldap_person_other_mailhost:
-  debug_print = "R: ldap_person_other_mailhost for $local_part@$domain: Forwarding to a mailHost if it is not us"
+  debug_print = "R: ldap_person_other_mailhost for $local_part@$domain: Forwarding to mailHost ${extract{mailHost}{$address_data}} if it is not us"
   driver = manualroute
   condition = ${if and { \
     # If the ldap lookup returned data
@@ -127,7 +127,7 @@ ldap_person_other_mailhost:
 DELIVER_HERE=eqi{${extract{mailHost}{$address_data}}}{EXTERNAL_HOSTNAME}
 # Forward the mail to any mailForwardingAddresses configured
 ldap_forwarding_address:
-  debug_print = "R: ldap_person_forward for $local_part@$domain: Forwarding to any mailForwardingAddresses"
+  debug_print = "R: ldap_person_forward for $local_part@$domain: Forwarding to any mailForwardingAddresses: ${extract{mailForwardingAddress}{$address_data}}"
   driver = redirect
   # If the ldap lookup returned data
   condition = $address_data
@@ -148,7 +148,7 @@ ldap_forwarding_address:
 
 # Deliver the mail locally if the mailHost points to us.
 ldap_deliver_local:
-  debug_print = "R: ldap_deliver_local for $local_part@$domain: Doing local delivery if the mailHost is us"
+  debug_print = "R: ldap_deliver_local for $local_part@$domain: Doing local delivery to ${extract{uniqueIdentifier}{$address_data}} if the mailHost is us"
   driver = accept
 
   condition = ${if and { \
