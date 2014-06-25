@@ -80,14 +80,7 @@ ldap_group_member:
   # mail address (if any) of each member and append any rfc822members
   # directly. This gracefully ignores any members without an email address.
   data = ${map \
-    # Since multipe attributes are separated by ", ", we replace ", " by "\n"
-    # and use that as a list separator (fortunately it's not just ",", as the
-    # documentation suggests, since then we would have had one big dn...)
-    {<\n ${sg \
-      {${extract{member}{$address_data}}} \
-      {, } \
-      {\n} \
-    }} \
+    {<, ${extract{member}{$address_data}}} \
     {${lookup ldap {LDAPSERVER/$item?mail?base?}}} \
   }, ${extract{rfc822member}{$address_data}}
 
