@@ -1,0 +1,35 @@
+# This file describes the rotation of the centralized log files in /data, from
+# all vservers.
+
+/data/log/rsyslog/hosts/*/*/*.log
+{
+        # Never throw away logfiles for now
+        rotate 999999
+        # Rotate daily
+        daily
+        # Compress rotated files
+        compress
+        # Use the rotation date as an extension
+        dateext
+        # Reload rsyslog after rotation, but only once for all scripts
+        sharedscripts
+        postrotate
+                invoke-rc.d rsyslog rotate > /dev/null
+        endscript
+        # Put the rotated logs in a separate dir
+        # Disabled, since logrotate insists these directories exist before
+        # rotation (and even before running scripts...)
+        # olddir archive
+}
+
+# This logfile is mostly used for quick lookups of recent events and for
+# logcheck to parse. So we only keep one rotated version. Logcheck should be
+# able to handle the rotation gracefully this way.
+/data/log/rsyslog/all.log
+{
+        rotate 1
+        daily
+        postrotate
+                invoke-rc.d rsyslog rotate > /dev/null
+        endscript
+}
