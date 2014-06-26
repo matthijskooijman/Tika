@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# This script prepends BASE_PATH to any arguments that are not options (start
+# with --) and do not start with BASE_PATH already.
+# It then executes its equivalent in /usr/bin with those updated arguments.
+#
+# This script is meant to provide a base path for accessing git repositories
+# through ssh. This is similar to running git-daemon(1) with --base-path and
+# --base-path-relaxed. 
+# 
+# Additionally, when pushing to a repository that does not exist yet, it is
+# automatically created and default hooks are added (to allow cloning through
+# HTTP).
+
+BASE_PATH='/data/vcs/git'
+HOOKS_PATH="$BASE_PATH/hooks"
+HOOKS="post-update post-receive"
+
+function init_repos() {
+	mkdir "$1" &> /dev/null  || return 1 
+	(cd $1 && git --bare init &> /dev/null) || return 1
+	for hook in $HOOKS; do
+	    ln -s -f "$HOOKS_PATH/$hook" "$1/hooks/" || return 1
+	done
+}
+
+# We keep an array of arguments, so we can handle quoting an spaces in
+# arguments properly.
+ARGS=()
+i=0
+until [ "$#" -eq 0 ]
+do
+	if echo $1 | egrep "^--" &>/dev/null; then
+		# This is an option argument, leave it untouched
+		ARGS[$i]="$1"
+	elif echo $1 | egrep ".git$" &>/dev/null; then
+		# This is a path to a git repository
+		DIR="$1"
+		# Prepend BASE_PATH if the path does not start with it already.
+		if ! echo $DIR | egrep "^$BASE_PATH" &>/dev/null; then
+			DIR="$BASE_PATH/$DIR"
+		fi
+	
+		# When the client wants us to receive a pack, create the git
+		# repository if it does not exist yet	
+		if [ "`basename $0`" = "git-receive-pack" -a ! -e "$DIR" ]; then
+			init_repos "$DIR" || exit 1
+		fi
+		ARGS[$i]="$DIR"
+	else
+		# Not a path to a git repository, leave untouched.
+		ARGS[$i]="$1"
+	fi
+	((i++))
+	shift
+done
+
+exec /usr/bin/`basename $0` "${ARGS[@]}"
