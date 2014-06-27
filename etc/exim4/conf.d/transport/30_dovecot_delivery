@@ -1,8 +1,8 @@
 dovecot_deliver:
   driver = pipe
   # Let spamassassin scan the message, using the userpreferences of the user
-  # the message will be delivered to. Also, don't scan any messages > 20K.
-  transport_filter = /usr/bin/spamc -s 20480 -u "${extract{mail}{$address_data}}" --socket=/var/run/spamd.socket
+  # the message will be delivered to. Also, don't scan any messages > 100K.
+  transport_filter = /usr/bin/spamc -s 102400 -u "${extract{mail}{$address_data}}" --socket=/var/run/spamd.socket
 
   # Tell deliver about the sender and recipient addresses. Deliver will look
   # up the mailbox location itself. Note that we always use the primary mail
