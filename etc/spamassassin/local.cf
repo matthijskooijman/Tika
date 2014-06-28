@@ -47,8 +47,10 @@
 #   should be precreated and be writable to the user running spamd (nobody).
 bayes_path /data/mail/spamassassin/bayes
 
-
-
+# dovecot is configured to run both learn and report on spam messages, so don't
+# double-train those messages (there is no bayes_learn_during_revoke, so we
+# can't just always only use report/revoke from dovecot).
+bayes_learn_during_report 0
 
 #   Bayesian classifier auto-learning (default: 1)
 #
