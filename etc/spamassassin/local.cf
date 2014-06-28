@@ -62,6 +62,9 @@ bayes_path /data/mail/spamassassin/bayes
 # bayes_ignore_header X-Spam-Flag
 # bayes_ignore_header X-Spam-Status
 
+pyzor_options --homedir /data/mail/spamassassin/pyzor
+
+razor_config /data/mail/spamassassin/razor/razor-agent.conf
 
 #   Some shortcircuiting, if the plugin is enabled
 # 
