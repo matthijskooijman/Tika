@@ -35,10 +35,9 @@ acl_check_data:
   # Use spamassassin to scan messages so we can reject them at SMTP time. This
   # entry just does the check and adds the header, the next entry denies the
   # message if needed. 
-  # We pass a  username of "nobody" to make spamassassin use the global
-  # defaults instead of any user's specific settings.
+  # We pass a  username of "preliminary" to make spamassassin use specific settings
   warn
-    spam = nobody:true
+    spam = preliminary:true
     add_header = X-Preliminary-Spam-Score: $spam_score ($spam_bar)
 
   # Deny messages that are really obvious spam (>12 score)
