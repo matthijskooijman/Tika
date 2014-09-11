@@ -1,13 +1,16 @@
-dovecot: deliver\([-a-z]*\): sieve: msgid=.*: stored mail into mailbox '[^']*'$
-dovecot: deliver\([-a-z]*\): msgid=[^:]*: saved mail to .*$
+dovecot: lda\([-_[:alnum:]]*\): sieve: msgid=.*: stored mail into mailbox '[^']*'$
+dovecot: lda\([-_[:alnum:]]*\): sieve: msgid=.*: marked message to be discarded if not explicitly delivered \(discard action\)$
+dovecot: lda\([-_[:alnum:]]*\): msgid=[^:]*: saved mail to .*$
 dovecot-auth: pam_unix\(dovecot:session\): session opened for user [-a-z]* by \(uid=0\)$
 dovecot-auth: pam_unix\(dovecot:session\): session opened for user [-a-z]*$
 dovecot-auth: pam_unix\(dovecot:session\): session closed for user [-a-z]*$
-dovecot: IMAP\([-a-z]*\): Connection closed bytes=[0-9/]*$
-dovecot: IMAP\([-a-z]*\): Connection closed: Connection reset by peer bytes=[0-9/]*$
-dovecot: IMAP\([-a-z]*\): Disconnected: Logged out bytes=[0-9/]*$
-dovecot: IMAP\([-a-z]*\): Disconnected in IDLE bytes=[0-9/]*$
-dovecot: IMAP\([-a-z]*\): Disconnected for inactivity bytes=[0-9/]*$
-dovecot: imap-login: Disconnected (no auth attempts): rip=[0-9.]*, lip=[0-9.]*, TLS$
-dovecot: imap-login: Disconnected \(no auth attempts\): rip=[0-9.]*, lip=[0-9.]*, TLS: Disconnected$
-dovecot: imap-login: Disconnected \(no auth attempts\): rip=[0-9.]*, lip=[0-9.]*, TLS handshaking: Disconnected$
+dovecot: imap\([-_[:alnum:]]+\): Connection closed in=[0-9]+ out=[0-9]+$
+dovecot: imap\([-_[:alnum:]]+\): Connection closed: Connection reset by peer in=[0-9]+ out=[0-9]+$
+dovecot: imap\([-_[:alnum:]]+\): Disconnected: Logged out in=[0-9]+ out=[0-9]+$
+dovecot: managesieve\([-_[:alnum:]]+\): Disconnected: Logged out bytes=[/0-9]+$
+dovecot: imap\([-_[:alnum:]]+\): Disconnected: Disconnected( in IDLE)? in=[0-9]+ out=[0-9]+$
+dovecot: imap\([-_[:alnum:]]+\): Disconnected for inactivity( in reading our output)? in=[0-9]+ out=[0-9]+$
+dovecot: (imap|managesieve)-login: (Disconnected|Aborted login)(: (Too many invalid commands\.|Inactivity))? \((no auth attempts in [0-9]+ secs|disconnected before greeting, waited [0-9]+ secs|tried to use disallowed plaintext auth)\): user=<>, rip=[.:[:xdigit:]]+, lip=[.:[:xdigit:]]+(, TLS( handshaking)?(: (Disconnected|(SSL_read\(\)|SSL_accept\(\)) syscall failed: Connection reset by peer))?)?, session=<[[:alnum:]+=./]+>$
+dovecot: imap-login: Disconnected \(auth failed, [0-9] attempts in [0-9]+ secs\) user=<[a-zA-Z0-9_-]+>, rip=[.:[:xdigit:]]+, lip=[.:[:xdigit:]]+, TLS, session=<[[:alnum:]+=./]+>$
+dovecot: managesieve-login: Login: user=<[._[:alnum:]-]+>, method=[[:alnum:]-]+, rip=[.:[:xdigit:]]+, lip=[.:[:xdigit:]]+, mpid=[[:xdigit:]]+, (TLS( handshake)?|secured), session=<[[:alnum:]+=./]+>$
+dovecot: imap-login: Login: user=<[-_.@[:alnum:]]+>, method=[[:alnum:]-]+, rip=[.:[:xdigit:]]+, lip=[.:[:xdigit:]]+, mpid=[[:xdigit:]]+(, (TLS( handshake)?|secured))?, session=<[[:alnum:]+=./]+>$
