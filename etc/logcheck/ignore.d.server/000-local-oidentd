@@ -1,0 +1,4 @@
+oidentd\[[0-9]+\]: Connection from [-.[:alnum:]]+ \([[:xdigit:].:]+\):[0-9]+$
+oidentd\[[0-9]+\]: Connection from [[:xdigit:].:]+:[0-9]+$
+oidentd\[[0-9]+\]: \[[-.[:alnum:]]+\] Successful lookup: [0-9]+ , [0-9]+ : [-_[:alnum:]]+ \([-_[:alnum:]]+\)$
+oidentd\[[0-9]+\]: \[[-.[:alnum:]]+\] Successful lookup \(by forward\): [0-9]+ \([0-9]+\) , [0-9]+ : [-_[:alnum:]]+$

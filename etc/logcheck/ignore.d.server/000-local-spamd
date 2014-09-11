@@ -1,0 +1,11 @@
+spamd\[[0-9]+\]: prefork: adjust: [0-9]+ idle children less than [0-9]+ minimum idle children. Increasing spamd children: [0-9]+ started.$
+spamd\[[0-9]+\]: prefork: adjust: [0-9]+ idle children more than [0-9]+ maximum idle children. Decreasing spamd children: [0-9]+ killed.$
+spamd\[[0-9]+\]: spamd: handled cleanup of child pid \[[0-9]+\] due to SIGCHLD: interrupted, signal 2 \(0002\)$
+spamd\[[0-9]+\]: spamd: server hit by SIGHUP, restarting$
+spamd\[[0-9]+\]: spamd: child \[[0-9]+\] killed successfully: interrupted, signal 2 \(0002\)$
+spamd\[[0-9]+\]: spamd: restarting using '/usr/sbin/spamd .*'$
+spamd.pid\[[0-9]+\]: spamd: restarting using '/usr/sbin/spamd .*'$
+spamd\[[0-9]+\]: spamd: server started on UNIX domain socket /var/run/spamd.socket \(running version [0-9.]+\)
+spamd\[[0-9]+\]: pyzor: \[[0-9]+\] error: TERMINATED, signal 15 \(000f\)
+spamd\[[0-9]+\]: spamd: Tell: Removing remote for [a-zA-Z0-9_-]+:[0-9]+ in [0-9.]+ seconds, [0-9]+ bytes$
+
