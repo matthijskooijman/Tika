@@ -1,2 +1,5 @@
 sshd\[[0-9]*\]: Received disconnect from [0-9.]*: 11: disconnected by user$
 sshd\[[0-9]*\]: Failed password for root from [0-9.]* port [0-9]* ssh2$
+# See https://bugzilla.mindrot.org/show_bug.cgi?id=2249
+sshd\[[0-9]*\]: PAM service\(sshd\) ignoring max retries; [0-9]+ > [0-9]+
+sshd\[[0-9]*\]: subsystem request for sftp by user [a-zA-Z_-]+$
