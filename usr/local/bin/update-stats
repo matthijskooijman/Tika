@@ -98,6 +98,11 @@ for (d, subdomains) in domains.items():
   create_dir(os.path.join(logs_dir, d))
   for (s, primary, aliases) in subdomains:
     create_dir(os.path.join(logs_dir, d, s))
+    # ensure access.log exists
+    f = os.path.join(logs_dir, d, s, 'access.log')
+    open(f, 'a').close()
+    # Chown to awstats_user, keep gid
+    os.chown(f, awstats_user, os.stat(f).st_gid)
 
 
 # Now, run awstats to parse log files.
