@@ -2,6 +2,7 @@
 # The PAM configuration file for the sudo service
 #
 
+auth [success=2 default=ignore] pam_ssh_agent_auth.so file=/data/users/sudo_keys
 @include common-auth
 @include common-account
 @include common-session
