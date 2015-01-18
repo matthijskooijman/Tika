@@ -1,0 +1,14 @@
+"/var/log/uwsgi/vassals/*/*.log" {
+    rotate 52 
+    weekly
+    missingok
+    compress
+    delaycompress
+    sharedscripts
+    postrotate
+        # This seems to be a bit overkill, but uwsgi doesn't
+        # seem to have a proper reload (the log-reopen option
+        # didn't want to work).
+        invoke-rc.d uwsgi-emperor restart > /dev/null
+    endscript
+}
