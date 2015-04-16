@@ -5,6 +5,7 @@
     compress
     delaycompress
     sharedscripts
+    create
     postrotate
         # This seems to be a bit overkill, but uwsgi doesn't
         # seem to have a proper reload (the log-reopen option
