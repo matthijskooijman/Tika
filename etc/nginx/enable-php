@@ -1,0 +1,6 @@
+location ~ (.*\.php)(/.*|$) {
+        set $uwsgi_app app-php;
+        include uwsgi;
+}
+
+# vim: set ts=8 sts=8 sw=8 noexpandtab filetype=conf:

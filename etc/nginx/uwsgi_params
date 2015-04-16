@@ -3,8 +3,13 @@ uwsgi_param	REQUEST_METHOD		$request_method;
 uwsgi_param	CONTENT_TYPE		$content_type;
 uwsgi_param	CONTENT_LENGTH		$content_length;
 
+# $path_info has a default in nginx.conf, $script_name defaults to
+# empty. Both can be overridden in a server / location block with the
+# "set" directive.
+uwsgi_param	PATH_INFO		$path_info;
+uwsgi_param	SCRIPT_NAME		$script_name;
+
 uwsgi_param	REQUEST_URI		$request_uri;
-uwsgi_param	PATH_INFO		$document_uri;
 uwsgi_param	DOCUMENT_ROOT		$document_root;
 uwsgi_param	SERVER_PROTOCOL		$server_protocol;
 uwsgi_param	UWSGI_SCHEME		$scheme;
@@ -13,3 +18,5 @@ uwsgi_param	REMOTE_ADDR		$remote_addr;
 uwsgi_param	REMOTE_PORT		$remote_port;
 uwsgi_param	SERVER_PORT		$server_port;
 uwsgi_param	SERVER_NAME		$server_name;
+
+# vim: set ts=8 sts=8 sw=8 noexpandtab filetype=conf:
