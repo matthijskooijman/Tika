@@ -1,0 +1,18 @@
+server {
+	listen 80;
+	listen [::]:80;
+
+	server_name www.chimara-if.org chimara-if.org;
+
+	# Enable PHP
+	include enable-php;
+
+	location ~ ^(/trac)(/.*)?$ {
+		set $uwsgi_app app-trac;
+		set $script_name $1;
+		set $path_info $2;
+		include uwsgi;
+        }
+}
+
+# vim: set ts=8 sts=8 sw=8 noexpandtab filetype=conf:
