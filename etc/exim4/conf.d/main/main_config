@@ -68,8 +68,9 @@ timeout_frozen_after = 7d
 freeze_tell = postmaster
 # Define spool directory
 spool_directory = /var/spool/exim4
-# Don't send out delivery delay warnings (by default once every 24h).
-delay_warning =
+# When a message is delayed, send out a warning after 4 hours, one after 48
+# hours and no more after that.
+delay_warning = 4h:48h:99d
 
 # Log subjects, for easy tracing of messages and peer dn on TLS connections.
 # Don't log complete headers on rejects, that clutters the log.
