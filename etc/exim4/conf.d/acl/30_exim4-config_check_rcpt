@@ -66,6 +66,15 @@ acl_check_rcpt:
     local_parts = ^[./|] : ^.*[@%!`#&?] : ^.*/\\.\\./
     message = restricted characters in address
 
+  # Any mail coming login.local, addressed to a local domain but not sent from
+  # a local domain is likely mail being forwarded by e.g. fetchmail (and not
+  # newly submitted mail from a MUA). Accept this mail without further checking
+  # - rejecting it will only make the mail stick around and retried on every
+  # fetchmail run.
+  accept
+    hosts = +fetchmail_hosts
+    domains = +local_domains
+    sender_domains = !+local_domains
 
   # Accept mail to postmaster in any local domain, regardless of the source,
   # and without verifying the sender.

@@ -24,6 +24,13 @@ domainlist relay_to_domains =
 # Relay messages for all other containers and the host.
 hostlist relay_from_hosts = 10.42.0.0/24 : 127.0.0.1
 
+# Hosts that are known to run fetchmail or similar forwarding services that do
+# not benefit from extensive checking.
+# We use the primary address of login.local here (also used for outgoing SMTP),
+# since avahi seems to resolve an arbitrary one (so writing "login.local" will
+# fail).
+hostlist fetchmail_hosts = 10.42.0.16
+
 # Don't reject spam from these hosts, since they are known dumb, but trusted
 # relays. They will only send rejects to the wrong people.
 hostlist dont_reject_spam_hosts = *.utsp.utwente.nl : *.snt.utwente.nl
