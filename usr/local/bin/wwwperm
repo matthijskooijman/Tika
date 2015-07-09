@@ -1,0 +1,522 @@
+#!/usr/bin/env python3
+
+import traceback
+import argparse
+import posix1e
+import termios
+import stat
+import pwd
+import grp
+import tty
+import sys
+import os
+import re
+
+from termios import ECHO, ICANON, VMIN, VTIME, TCSAFLUSH
+from posix1e import ACL_USER, ACL_USER_OBJ, ACL_GROUP, ACL_GROUP_OBJ, ACL_OTHER
+from posix1e import ACL_MASK, ACL_TYPE_ACCESS, ACL_TYPE_DEFAULT
+from posix1e import ACL_READ, ACL_WRITE, ACL_EXECUTE
+
+# Uids and gids under this number are never considered admin groups or
+# app users
+MIN_UID_GID = 1000
+# This group always has read-access
+WEBSERVER = pwd.getpwnam('www-data').pw_uid
+# This gruop always has write-access
+GLOBAL_ADMINS = grp.getgrnam('tika-admins').gr_gid
+
+def guess_user_from_path(path):
+    match = re.match("^/data/www/([^/]+)(/|$)", path)
+    if match:
+      yield match.group(1).replace('.', '-')
+
+def guess_group_from_username(username):
+    match = re.match("^(.*)(-[^-]*)$", username)
+    if match:
+      yield match.group(1)
+      yield match.group(1) + "-admins"
+
+parser = argparse.ArgumentParser(
+# Make sure we preserve paragraph breaks in description and epilog
+  formatter_class=argparse.RawDescriptionHelpFormatter,
+  description=
+"""
+Fix up or check permissions on parts of the webroot.
+
+Each part of the webroot is assumed to have a single admin-group, which
+is the group of users that has write access to all files in that part
+(through being the owning group of files).
+
+Furthermore, the app-user is the user that webapps run under for that
+part of the webroot, which will always have read access (through an ACL
+entry) and can optionally have write access (through being the owner of
+files).
+
+When --fix is specified, the permissions will be reset to the standard
+permissions exactly - any extra ACL entries will be cleared.
+special care to make sure that --admin-group and --app-user are correct,
+incorrect values will throw away information.
+""",
+epilog=
+"""
+When --admin-group is not specified, it is guessed based on the current
+owning group of the specified files, their parent directory, or based on
+the name of the app-user.
+
+When --app-user is not specified, it is guessed based on the ACL of the
+specified files, their parent directory, or based on the root domain
+part of the filename (e.g. /data/www/tikatika.nl).
+
+Guessing happens once for each file specified on the commandline. If
+--recursive is given, the guessed values are reused during recursion. If
+any values are guessed and --assume-yes is not passed, a confirmation
+prompt is shown before using the guessed values.
+
+When neither --app-writable nor --app-readonly is passed, the current
+writable (based on the file ownership only, not on the actual writable
+status!).
+""",
+)
+parser.add_argument("files", nargs="+", help="The files or directories to work on")
+parser.add_argument("-g", "--admin-group", help="The name of the administrators group")
+parser.add_argument("-u", "--app-user", help="The name of the user under which webapps run")
+parser.add_argument("-R", "--recursive", help="Apply permissions recursively",
+                    action="store_true")
+parser.add_argument("-v", "--verbose", help="increase output verbosity",
+                    action="count", default=0)
+parser.add_argument("-y", "--assume-yes", help="Use guessed values without asking",
+                    action="store_true")
+
+writable = parser.add_mutually_exclusive_group()
+writable.add_argument("-w", "--app-writable", help="Grant the app user write access",
+                      action="store_true", default=None)
+writable.add_argument("-r", "--app-readonly", help="Do not grant the app user write access",
+                      action="store_false", dest="app_writable")
+
+actions = parser.add_mutually_exclusive_group(required=True)
+actions.add_argument("-F", "--fix", help="Fix permissions",
+                     action="store_true")
+actions.add_argument("-n", "--dry-run", help="Show what would be changed by --fix",
+                     action="store_true")
+actions.add_argument("-c", "--check", help="Show differences compared to the permissions that would be set",
+                     action="store_true")
+actions.add_argument("-W", "--find-writable", help="Find all paths owned by the app user. Implies --recursive",
+                     action="store_true")
+
+opts = parser.parse_args()
+
+class RawInput:
+  """
+  Section to use in a with statement. Inside the block, the given
+  terminal connected to the given fd is set to raw input (no input
+  buffering). It is switched back to the old mode when leaving the
+  block.
+  """
+  def __init__(self, fd):
+    self.fd = fd
+
+  def __enter__(self):
+    # This is basically the same code as tty.set_cbreak()
+    IFLAG = 0
+    OFLAG = 1
+    CFLAG = 2
+    LFLAG = 3
+    ISPEED = 4
+    OSPEED = 5
+    CC = 6
+
+    self.old_mode = termios.tcgetattr(self.fd)
+    mode = termios.tcgetattr(self.fd)
+    mode[LFLAG] = mode[LFLAG] & ~(ECHO | ICANON)
+    mode[CC][VMIN] = 1
+    mode[CC][VTIME] = 0
+    termios.tcsetattr(self.fd, TCSAFLUSH, mode)
+    sys.stdout.flush()
+
+  def __exit__(self, exc_type, exc_value, traceback):
+    termios.tcsetattr(self.fd, TCSAFLUSH, self.old_mode)
+
+def read_input(input_map):
+  """
+  Read single characters from stdin, until on of the keys in input_map
+  is read. If that happens, return the corresponding value from
+  input_map.
+  """
+  with RawInput(sys.stdin.fileno()):
+    while True:
+      c = sys.stdin.read(1)
+      if c in input_map:
+        return input_map[c]
+
+def handle_group_and_user(path):
+  """
+  Handle the group and user arguments.
+   - Resolve them to numerical ids
+   - Guess any that are missing
+  """
+
+  g = None
+  # First, resolve any passed 
+  if opts.admin_group is not None:
+    try:
+      g = int(opts.admin_group)
+    except ValueError:
+      try:
+        g = grp.getgrnam(opts.admin_group).gr_gid
+      except KeyError:
+        sys.stderr.write("Invalid admin-group supplied: {}\n".format(opts.admin_group))
+        sys.exit(1)
+    if g < MIN_UID_GID:
+      sys.stderr.write("Admin-group gid ({}) cannot be below {}\n".format(g, MIN_UID_GID))
+      sys.exit(1)
+
+  u = None
+  if opts.app_user is not None:
+    try:
+      u = int(opts.app_user)
+    except ValueError:
+      try:
+        u = pwd.getpwnam(opts.app_user).pw_uid
+      except KeyError:
+        sys.stderr.write("Invalid app-user supplied: {}\n".format(opts.app_user))
+        sys.exit(1)
+
+    if u < MIN_UID_GID:
+      sys.stderr.write("App-user uid ({}) cannot be below {}\n".format(u, MIN_UID_GID))
+      sys.exit(1)
+
+  # If both are supplied, we're done
+  if g is not None and u is not None:
+      return (g, u)
+
+  if opts.verbose > 0:
+    sys.stdout.write("Admin group or app-user not supplied, trying to guess...\n")
+    
+  # First, guess from the permissions on the current or parent directory
+  # from the parent directory)
+  for p in (path, os.path.dirname(path)):
+
+    if g is None:
+      # The admin-group should be the owning group
+      gid = os.stat(p).st_gid
+      if gid >= MIN_UID_GID:
+        g = gid
+
+    if u is None:
+      # The app-user should appear in the ACL
+      for entry in posix1e.ACL(file=p):
+        if entry.tag_type == posix1e.ACL_USER and entry.qualifier >= MIN_UID_GID:
+          u = entry.qualifier
+
+  # If we still didn't find the user, see if we can guess from the
+  # filename
+  if u is None:
+    for name in guess_user_from_path(path):
+      try:
+        u = pwd.getpwnam(name).pw_uid
+        break
+      except KeyError:
+        pass
+
+  if g is None and u is not None:
+    for name in guess_group_from_username(uid_to_name(u)):
+      try:
+        g = grp.getgrnam(name).gr_gid
+        break
+      except KeyError:
+        pass
+ 
+  if g is not None:
+    sys.stdout.write("Found admin-group {}\n".format(gid_to_name(g)))
+  else:
+    sys.stdout.write("Did not find the admin-group, please specify with --admin-group\n")
+      
+  if u is not None:
+    sys.stdout.write("Found app-user {}\n".format(uid_to_name(u)))
+  else:
+    sys.stdout.write("Did not find the app-user, please specify with --app-user\n")
+
+  # If we found both and the user is ok with them, return them
+  if g is None or u is None:
+    sys.exit(1)
+
+  if not opts.assume_yes:
+    sys.stdout.write("Is that correct? [Yn]")
+    result = read_input({'n': False, 'N': False, 'y': True, 'Y': True, '\r': True, '\n': True})
+    sys.stdout.write("\n")
+
+    if not result:
+      sys.exit(1)
+
+  return (g, u)
+
+
+def resolve_pw_entry(function, member):
+  def resolve(id):
+    try:
+      return getattr(function(id), member)
+    except KeyError:
+      return str(id)
+  return resolve
+uid_to_name = resolve_pw_entry(pwd.getpwuid, 'pw_name')
+gid_to_name = resolve_pw_entry(grp.getgrgid, 'gr_name')
+
+
+def append_acl_entry(acl, tag_type, perms, qualifier = None):
+  """
+  Append an ACL entry to the given ACL, using the given properties.
+
+  tag_type - one of the ACL_* type constants
+  perms - a list of ACL_* permission constants
+  qualifier - the numerical uid or gid (if applicable)
+  """
+  entry = acl.append()
+  entry.tag_type = tag_type
+  for perm in perms:
+    entry.permset.add(perm)
+
+  if qualifier is not None:
+    entry.qualifier = qualifier
+
+def acl_entry_to_string(entry):
+  """
+  Returns a string form of the given ACL entry.
+
+  posix1e has a method to do this for a complete ACL, but not for a
+  single entry, so this copies the entry into a new ACL instead.
+  """
+  acl = posix1e.ACL()
+  new = acl.append()
+  new.tag_type = entry.tag_type
+  if entry.tag_type in [ACL_USER, ACL_GROUP]:
+    new.qualifier = entry.qualifier
+  new.permset = entry.permset
+  return acl.to_any_text(separator=','.encode('ascii'), options=posix1e.TEXT_ABBREVIATE).decode('utf-8')
+
+def check_acl(path, should, output):
+  """
+  Compare the ACL of the given path with the given ACL and report any differences
+  """
+  actual = posix1e.ACL(file=path)
+  equal = True
+  for should_entry in should:
+    found = False
+    for actual_entry in actual:
+      if actual_entry.tag_type != should_entry.tag_type:
+        continue
+      if (actual_entry.tag_type in [ACL_USER, ACL_GROUP] and 
+          actual_entry.qualifier != should_entry.qualifier):
+        continue
+
+      if (actual_entry.permset.read != should_entry.permset.read or
+          actual_entry.permset.write != should_entry.permset.write or
+          actual_entry.permset.execute != should_entry.permset.execute):
+        equal = False
+        if output:
+          sys.stdout.write("{}: ACL entry {} should be {}\n".format(path, 
+            acl_entry_to_string(actual_entry), acl_entry_to_string(should_entry)))
+
+      actual.delete_entry(actual_entry)
+      found = True
+      break
+
+    if not found:
+      equal = False
+      if output:
+        sys.stdout.write("{}: ACL entry missing: {}\n".format(path,
+          acl_entry_to_string(should_entry)))
+
+  # Anything left in actual is extra
+  for actual_entry in actual:
+    equal = False
+    if output:
+      sys.stdout.write("{}: Extra ACL entry: {}\n".format(path,
+        acl_entry_to_string(actual_entry)))
+
+  return equal
+
+def process_path(path, g, u):
+  """
+  Apply the requested action to the given path (non-recursively).
+  """
+  try:
+    st = os.lstat(path)
+    if not stat.S_ISDIR(st.st_mode) and not stat.S_ISREG(st.st_mode):
+      if opts.verbose > 1:
+        sys.stdout.write("Skipping special file or link: {}\n".format(path))
+      return
+
+    writable = opts.app_writable
+    if writable is None:
+      # See if this file is already writable right now
+      writable = (st.st_uid == u)
+
+      if opts.verbose > 2 and writable:
+        sys.stdout.write("{}: Is currently owned by {}, should stay writable\n".format(path, uid_to_name(u)))
+  
+    # Directories should have +x and +s
+    rx = [ACL_READ, ACL_EXECUTE]
+    rwx = [ACL_READ, ACL_WRITE, ACL_EXECUTE]
+    if stat.S_ISDIR(st.st_mode):
+      mode = 0o2770
+      rwX = [ACL_READ, ACL_WRITE, ACL_EXECUTE]
+    else:
+      mode = 0o0660
+      rwX = [ACL_READ, ACL_WRITE]
+
+
+    # First, set or clear the basic mode bits as needed (we'll overwrite
+    # the ugo bits with the ACL, but this is mostly needed for the
+    # setgid bit)
+    if stat.S_IMODE(st.st_mode) != mode:
+      if opts.check:
+        sys.stdout.write("{}: Mode is {:04o}, should be {:04o}\n".format(
+          path, stat.S_IMODE(st.st_mode), mode))
+      elif opts.dry_run:
+        sys.stdout.write("{}: Would change mode to {:04o}\n".format(path, mode))
+      elif opts.fix:
+        if opts.verbose > 2:
+          sys.stdout.write("{}: Changing mode to {:04o}\n".format(path, mode))
+        os.chmod(path, mode)
+
+    # Find out the needed file owner
+    if writable:
+      uid = u
+    else:
+      # If it's currently writable but it shouldn't be, chown to root
+      if st.st_uid == u:
+        uid = 0
+      else:
+        uid = st.st_uid
+
+    # Then set the file ownership correctly
+    if st.st_uid != uid or st.st_gid != g:
+      if opts.check:
+        sys.stdout.write("{}: Ownership is {}:{}, should be {}:{}\n".format(path,
+          uid_to_name(st.st_uid), gid_to_name(st.st_gid),
+          uid_to_name(uid), gid_to_name(g)))
+      elif opts.dry_run:
+        sys.stdout.write("{}: Would change ownership to {}:{}\n".format(
+          path, uid_to_name(uid), gid_to_name(g)))
+      elif opts.fix:
+        if opts.verbose > 2:
+          sys.stdout.write("{}: Changing ownership to {}:{}\n".format(
+            path, uid_to_name(uid), gid_to_name(g)))
+        os.chown(path, uid, g)
+
+    # Finally, set the right ACL
+    acl = posix1e.ACL()
+    # The owning user and mask entries have execute permission only for
+    # directories.  All other entries have execute unconditionally and
+    # are masked by the mask entry, to mimic how new files are created
+    # by Linux.
+    append_acl_entry(acl, ACL_USER_OBJ, rwX)
+    append_acl_entry(acl, ACL_GROUP_OBJ, rwx)
+    append_acl_entry(acl, ACL_OTHER, [])
+    append_acl_entry(acl, ACL_USER, rx, u)
+    append_acl_entry(acl, ACL_USER, rx, WEBSERVER)
+    append_acl_entry(acl, ACL_GROUP, rwx, GLOBAL_ADMINS)
+    append_acl_entry(acl, ACL_MASK, rwX)
+
+    if not check_acl(path, acl, output=opts.check):
+      if opts.dry_run:
+        sys.stdout.write("{}: Would apply ACL {}\n".format(
+          path, acl.to_any_text(separator=','.encode('ascii'), options=posix1e.TEXT_ABBREVIATE).decode('utf-8')))
+      elif opts.fix:
+        if opts.verbose > 2:
+          sys.stdout.write("{}: Applying ACL {}\n".format(
+            path, acl.to_any_text(separator=','.encode('ascii'), options=posix1e.TEXT_ABBREVIATE).decode('utf-8')))
+        acl.applyto(path, ACL_TYPE_ACCESS)
+        if stat.S_ISDIR(st.st_mode):
+          acl.applyto(path, ACL_TYPE_DEFAULT)
+
+  except OSError as e:
+    if opts.dry_run or opts.check:
+      sys.stderr.write("Failed to access {}: {}\n".format(path, e.strerror))
+    else:
+      sys.stderr.write("Failed to modify {}: {}\n".format(path, e.strerror))
+    if opts.verbose > 0:
+      sys.stderr.write(traceback.format_exc())
+  except UnicodeEncodeError as e:
+    # Work around https://github.com/iustin/pylibacl/issues/2
+    sys.stderr.write("Skipping invalid pathname: {}\n".format(path.encode('utf-8', errors='replace').decode('utf-8')))
+
+UNWRITABLE = 0
+WRITABLE_FILE = 1
+WRITABLE_DIR = 2
+WRITABLE_TREE = 3
+
+def find_writable(path, u, callback):
+  """
+  Look recursively through path and find writeable files and
+  directories. callback is called with a full pathname and a status,
+  which means:
+   - WRITABLE_FILE: This is a file, which is writable, but not part of a
+     writable tree.
+   - WRITABLE_DIR: This is a dir which is writeable, but not all of its
+     contents are writable.
+   - WRITABLE_TREE: This is a dir which is writeable, whose contents are
+     also writable, but is not part of another writable tree (e.g. it's
+     the biggest possible writable subtree).
+  """
+
+  def helper(path):
+    st = os.lstat(path)
+    self_writable = (st.st_uid == u)
+    if stat.S_ISDIR(st.st_mode):
+      contents = os.listdir(path)
+      writable = []
+      for p in contents:
+        p = os.path.join(path, p)
+        status = helper(p)
+        if status == WRITABLE_FILE or status == WRITABLE_TREE:
+          writable.append((p, status))
+
+      # If we and all our contents are writable, let our caller find out
+      # what to do
+      if len(writable) == len(contents) and self_writable:
+        return WRITABLE_TREE
+
+      for (p, status) in writable:
+        callback(p, status)
+
+      if self_writable:
+        callback(path, WRITABLE_DIR)
+        return WRITABLE_DIR
+
+      return UNWRITABLE
+    else:
+      if self_writable:
+        return WRITABLE_FILE
+      return UNWRITABLE
+      
+  status = helper(path)
+  if status == WRITABLE_FILE or status == WRITABLE_TREE:
+    callback(path, status)
+
+def show_oserror(e):
+  sys.stderr.write("Skipping {}: {}\n".format(e.filename, e.strerror))
+
+def print_writable(path, status):
+  if status == WRITABLE_TREE:
+    sys.stdout.write("{} is writeable, including all of its contents\n".format(path))
+  elif status == WRITABLE_DIR:
+    sys.stdout.write("{} is writeable, but not all of its contents\n".format(path))
+  else:
+    sys.stdout.write("{} is writeable\n".format(path))
+
+for path in opts.files:
+  path = os.path.abspath(path)
+  (admin_group, app_user) = handle_group_and_user(path)
+
+  if opts.find_writable:
+    find_writable(path, app_user, print_writable)
+  elif opts.recursive:
+    for (dir, _, files) in os.walk(path, onerror=show_oserror):
+      process_path(dir, admin_group, app_user)
+      for f in files:
+        process_path(os.path.join(dir, f), admin_group, app_user)
+  else:
+    process_path(path, admin_group, app_user)
+
+# vim: set sts=2 sw=2 et:
