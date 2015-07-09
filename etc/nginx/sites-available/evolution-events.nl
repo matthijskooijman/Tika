@@ -139,7 +139,7 @@ server {
 	listen 80;
 	listen [::]:80;
 
-	server_name hangout.evolution-events.nl;
+	server_name hangout.evolution-events.nl henkout.evolution-events.nl;
 	return 301 https://plus.google.com/hangouts/_/event/c098h01pseus1le68vkubv34r5k?authuser=0&hl=en;
 }
 
