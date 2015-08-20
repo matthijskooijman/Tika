@@ -1,1 +1,2 @@
 slapd\[[0-9]+\]: connection_read\([0-9]*\): no connection!$
+slapd\[[0-9]+\]: connection_input: conn=[0-9]* deferring operation: binding
