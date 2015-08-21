@@ -9,3 +9,5 @@ sshd\[[0-9]*\]: fatal: Read from socket failed: Connection reset by peer \[preau
 sshd\[[0-9]*\]: fatal: Write failed: Connection reset by peer \[preauth\]
 sshd\[[0-9]*\]: error: bind: Address already in use
 sshd\[[0-9]*\]: error: channel_setup_fwd_listener: cannot listen to port: [0-9]+
+sshd\[[0-9]*\]: Bad protocol version identification '.*' from [0-9.]+ port [0-9]+$
+sshd\[[0-9]*\]: fatal: Unable to negotiate a key exchange method \[preauth\]
