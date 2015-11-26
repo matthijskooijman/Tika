@@ -111,6 +111,7 @@ ldap_lookup_identity:
 ldap_person_other_mailhost:
   debug_print = "R: ldap_person_other_mailhost for $local_part@$domain: Forwarding to mailHost ${extract{mailHost}{$address_data}} if it is not us"
   driver = manualroute
+  domains = +virtual_domains
   condition = ${if and { \
     # If the ldap lookup returned data
     {!eqi {$address_data} {}} \
@@ -129,6 +130,7 @@ DELIVER_HERE=eqi{${extract{mailHost}{$address_data}}}{EXTERNAL_HOSTNAME}
 ldap_forwarding_address:
   debug_print = "R: ldap_person_forward for $local_part@$domain: Forwarding to any mailForwardingAddresses: ${extract{mailForwardingAddress}{$address_data}}"
   driver = redirect
+  domains = +virtual_domains
   # If the ldap lookup returned data
   condition = $address_data
 
@@ -150,6 +152,7 @@ ldap_forwarding_address:
 ldap_deliver_local:
   debug_print = "R: ldap_deliver_local for $local_part@$domain: Doing local delivery to ${extract{uniqueIdentifier}{$address_data}} if the mailHost is us"
   driver = accept
+  domains = +virtual_domains
 
   condition = ${if and { \
     # If the ldap lookup returned data
