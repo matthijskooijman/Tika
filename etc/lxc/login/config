@@ -18,6 +18,11 @@ lxc.network.veth.pair = lxc-login
 lxc.network.name = eth0
 lxc.network.link = br-lxc
 lxc.network.ipv4 = 10.42.0.16/24
+lxc.network.ipv4 = 10.42.0.17/24
+lxc.network.ipv4 = 10.42.0.18/24
+lxc.network.ipv4 = 10.42.0.19/24
+lxc.network.ipv4 = 10.42.0.20/24
+lxc.network.ipv4 = 10.42.0.21/24
 lxc.network.ipv4.gateway = auto
 
 # The number of ttys available (shouldn't be less than the getty's
