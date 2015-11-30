@@ -1,0 +1,8 @@
+ACTIVE="Yes"
+TCP="80:81*1024:65535"
+UDP=""
+ICMP=""
+GRE=""
+BROADCAST="No"
+COMMENT="HTTP: used for normal webbrowsing."
+RANGE="6;80:82*1024:65535"

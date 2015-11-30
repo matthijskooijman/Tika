@@ -1,0 +1,5 @@
+ACTIVE="yes"
+TCP="2000*1024:65535"
+BROADCAST="no"
+COMMENT="ManageSieve mail filter editing protocol"
+RANGE="6;4190*1024:65535"
