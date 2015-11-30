@@ -1,10 +1,12 @@
 [DEFAULT]
 chain = PRE-VRMR-FORWARD
+ignoreip = 127.0.0.1/8 10.42.0.0/24 84.245.29.136
+sender = root@tika.stderr.nl
 
 [ssh]
-enable = true
+enabled = true
 logpath = /data/log/rsyslog/all.log
 
 [dovecot]
-enable = true
+enabled = true
 logpath = /data/log/rsyslog/all.log
