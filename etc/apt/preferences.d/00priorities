@@ -10,7 +10,7 @@ Pin: release o=apt.stderr.nl,a=stderr
 Pin-Priority: 990
 
 Package: *
-Pin: release o=Debian Backports,a=wheezy-backports
+Pin: release o=Debian Backports
 Pin-Priority: 900
 
 Package: *
