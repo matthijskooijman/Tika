@@ -24,6 +24,10 @@ lxc.network.ipv4.gateway = auto
 # configured in the inittab).
 lxc.tty = 4
 
+# Set up /dev for systemd
+lxc.kmsg = 0
+lxc.autodev = 1
+
 # Use private pts for the container
 lxc.pts = 256
 

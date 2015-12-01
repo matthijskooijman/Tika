@@ -32,6 +32,10 @@ lxc.tty = 4
 # Use private pts for the container
 lxc.pts = 256
 
+# Set up /dev for systemd
+lxc.kmsg = 0
+lxc.autodev = 1
+
 # Deny all devices, except the following
 lxc.cgroup.devices.deny = a
 # /dev/null
