@@ -10,6 +10,10 @@ Pin: release o=apt.stderr.nl,a=stderr
 Pin-Priority: 990
 
 Package: *
+Pin: release o=packages.dotdeb.org
+Pin-Priority: 950
+
+Package: *
 Pin: release o=Debian Backports
 Pin-Priority: 900
 
