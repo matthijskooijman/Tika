@@ -4,18 +4,8 @@
 # WARNING: please read README.spamd before using.
 # There may be security risks.
 
-# Change to one to enable spamd
-ENABLED=1
-
 # Options
 # See man spamd for possible options. The -d option is automatically added.
-
-# Instead of using a TCP socket, listen on a UNIX socket. This allows us to
-# limit access to specific users (to prevent all users from being able to use
-# the TELL command to learn new spam/ham messages). By allowing access to the
-# spamd-access group, specific users (i.e., the users exim and dovecot are
-# running as) are given permission.
-SOCKET="--socketpath=/var/run/spamd.socket --socketowner=nobody --socketgroup=spamd-access --socketmode=0660"
 
 # Use -u nobody to always make spamd run as nobody. The default is to run as
 # root and drop to the username given by the client. Since we don't use real
@@ -26,19 +16,16 @@ SOCKET="--socketpath=/var/run/spamd.socket --socketowner=nobody --socketgroup=sp
 # Use --allow-tell to allow training messages using spamc. This removes the
 # need for complex permission settings on the bayes database files, since now
 # only spamd needs to access the bayes database.
+
+# Instead of using a TCP socket, listen on a UNIX socket. This allows us to
+# limit access to specific users (to prevent all users from being able to use
+# the TELL command to learn new spam/ham messages). By allowing access to the
+# spamd-access group, specific users (i.e., the users exim and dovecot are
+# running as) are given permission.
 #
 # Use --nouser-config to not try to load configs from homedirs ("users" are not
 # system users usually) and --sql-config to load preferences from SQL instead.
-OPTIONS="--create-prefs --max-children 10 -u nobody --allow-tell $SOCKET --nouser-config --sql-config"
-
-# Pid file
-# Where should spamd write its PID to file? If you use the -u or
-# --username option above, this needs to be writable by that user.
-# Otherwise, the init script will not be able to shut spamd down.
-PIDFILE="/var/run/spamd.pid"
-
-# Set nice level of spamd
-#NICE="--nicelevel 15"
+OPTIONS="--create-prefs --max-children 10 -u nobody --allow-tell --socketpath=/var/run/spamd.socket --socketowner=nobody --socketgroup=spamd-access --socketmode=0660 --nouser-config --sql-config"
 
 # Cronjob
 # Set to anything but 0 to enable the cron job to automatically update
