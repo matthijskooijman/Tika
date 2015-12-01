@@ -31,6 +31,9 @@ server {
 	listen [::]:80;
 
 	server_name parts.stderr.nl;
+	root /data/www/$domain/applications/PartKeepr/web;
+
+	try_files $uri /app.php?$args;
 
 	# Enable PHP
 	include enable-php;
