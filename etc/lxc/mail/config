@@ -7,7 +7,7 @@ lxc.utsname = mail.local
 lxc.rootfs = /containers/mail
 
 # Log console output
-lxc.console = /var/log/lxc/mail.lxc
+lxc.console.logfile = /var/log/lxc/mail.lxc
 
 # The container gets a single virtual eth0 interface with a statically assigned
 # address (assigned by lxc-start, no need for the container to assign any

@@ -7,7 +7,7 @@ lxc.utsname = ldap.local
 lxc.rootfs = /containers/ldap
 
 # Log console output
-lxc.console = /var/log/lxc/ldap.lxc
+lxc.console.logfile = /var/log/lxc/ldap.lxc
 
 # The container gets a single virtual eth0 interface with a statically assigned
 # address (assigned by lxc-start, no need for the container to assign any

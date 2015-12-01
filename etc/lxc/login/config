@@ -7,7 +7,7 @@ lxc.utsname = login.local
 lxc.rootfs = /containers/login
 
 # Log console output
-lxc.console = /var/log/lxc/login.lxc
+lxc.console.logfile = /var/log/lxc/login.lxc
 
 # The container gets a single virtual eth0 interface with a statically assigned
 # address (assigned by lxc-start, no need for the container to assign any
