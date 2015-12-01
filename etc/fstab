@@ -35,8 +35,8 @@ proc                        /proc           proc    defaults                0   
 /data/users          /containers/ldap/data/users            auto    nofail,defaults,bind         0   0
 /data/db/ldap        /containers/ldap/data/db/ldap          auto    nofail,defaults,bind         0   0
 
-/etc/skel            /containers/loging/etc/skel            auto    nofail,defaults,bind,ro      0   0
-/data/users          /containers/loging/data/users          auto    nofail,defaults,bind         0   0
+/etc/skel            /containers/login/etc/skel             auto    nofail,defaults,bind,ro      0   0
+/data/users          /containers/login/data/users           auto    nofail,defaults,bind         0   0
 /data/applications   /containers/login/data/applications    auto    nofail,defaults,bind         0   0
 /data/www            /containers/login/data/www             auto    nofail,defaults,bind         0   0
 /data/vcs            /containers/login/data/vcs             auto    nofail,defaults,bind         0   0
