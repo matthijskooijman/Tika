@@ -1,5 +1,0 @@
-# /etc/default/lxc
-
-LXC_AUTO="true"
-LXC_DIRECTORY="/etc/lxc"
-LXC_DEBCONFIG_WITH_LIVE_DEBCONFIG="true"
