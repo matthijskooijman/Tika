@@ -9,10 +9,49 @@ proc                        /proc           proc    defaults                0   
 /dev/mapper/tika-root       /               ext3    errors=remount-ro       0       1
 /dev/mapper/tika-data       /data           ext4    nofail,defaults,acl     0       2
 /dev/mapper/tika-home       /home           ext3    nofail,defaults,acl     0       2
-/dev/mapper/tika-containers /containers     ext4    nofail,defaults         0       2
+/dev/mapper/tika-containers /containers     ext4    nofail,defaults,shared  0       2
 /dev/mapper/tika-swap       none            swap    nofail,sw               0       0
 
 # Note that bindmounts with options are not normally supported by mount
 # directly (needing a remount to take effect), but are supported here due to a
 # systemd generator that generates the needed remounts automatically. See
 # /lib/systemd/system-generators/local-bind-remount-generator
+
+# Bindmounts for containers. Because /containers is mounted with the "shared"
+# option, any mounts below /containers are shared with the container (but not
+# vice versa). This also means that mounts can be added here while the
+# container is running, without needing a container restart.
+/etc/skel            /containers/log/etc/skel               auto    nofail,defaults,bind,ro      0   0
+/data/users          /containers/log/data/users             auto    nofail,defaults,bind         0   0
+/data/log            /containers/log/data/log               auto    nofail,defaults,bind         0   0
+
+/etc/skel            /containers/db/etc/skel                auto    nofail,defaults,bind,ro      0   0
+/data/users          /containers/db/data/users              auto    nofail,defaults,bind         0   0
+/data/db/mysql       /containers/db/data/db/mysql           auto    nofail,defaults,bind         0   0
+/data/db/pgsql       /containers/db/data/db/pgsql           auto    nofail,defaults,bind         0   0
+/data/db/mongo       /containers/db/data/db/mongo           auto    nofail,defaults,bind         0   0
+
+/etc/skel            /containers/ldap/etc/skel              auto    nofail,defaults,bind,ro      0   0
+/data/users          /containers/ldap/data/users            auto    nofail,defaults,bind         0   0
+/data/db/ldap        /containers/ldap/data/db/ldap          auto    nofail,defaults,bind         0   0
+
+/etc/skel            /containers/loging/etc/skel            auto    nofail,defaults,bind,ro      0   0
+/data/users          /containers/loging/data/users          auto    nofail,defaults,bind         0   0
+/data/applications   /containers/login/data/applications    auto    nofail,defaults,bind         0   0
+/data/www            /containers/login/data/www             auto    nofail,defaults,bind         0   0
+/data/vcs            /containers/login/data/vcs             auto    nofail,defaults,bind         0   0
+/data/apt-repository /containers/login/data/apt-repository  auto    nofail,defaults,bind         0   0
+
+/etc/skel            /containers/mail/etc/skel              auto    nofail,defaults,bind,ro      0   0
+/data/users          /containers/mail/data/users            auto    nofail,defaults,bind         0   0
+/data/mail           /containers/mail/data/mail             auto    nofail,defaults,bind         0   0
+
+/etc/skel            /containers/web/etc/skel               auto    nofail,defaults,bind,ro      0   0
+/data/users          /containers/web/data/users             auto    nofail,defaults,bind         0   0
+/data/www            /containers/web/data/www               auto    nofail,defaults,bind         0   0
+/data/vcs            /containers/web/data/vcs               auto    nofail,defaults,bind         0   0
+/data/apt-repository /containers/web/data/apt-repository    auto    nofail,defaults,bind         0   0
+/data/applications   /containers/web/data/applications      auto    nofail,defaults,bind         0   0
+
+/etc/skel            /containers/template/etc/skel          auto    nofail,defaults,bind,ro      0   0
+/data/users          /containers/template/data/users        auto    nofail,defaults,bind         0   0

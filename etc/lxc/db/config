@@ -51,14 +51,18 @@ lxc.cgroup.devices.allow = c 5:2 rwm
 # rtc
 lxc.cgroup.devices.allow = c 254:0 rwm
 
-# mounts (note that the second item in each list is the mount point, relative
- to the rootfs)
-lxc.mount.entry=proc proc proc nodev,noexec,nosuid 0 0
-lxc.mount.entry=sysfs sys sysfs defaults  0 0
-lxc.mount.entry=/data/users data/users none defaults,bind 0 0
-lxc.mount.entry=/etc/skel etc/skel none defaults,bind,ro 0 0
-lxc.mount.entry=/data/db/mysql data/db/mysql none defaults,bind 0 0
-lxc.mount.entry=/data/db/pgsql data/db/pgsql none defaults,bind 0 0
+# Mount special filesystems. Most of these ar normally mounted by systemd on
+# startup, but by pre-mounting them here, systemd can run without cap_sys_admin.
+# Regular mounts are in /etc/fstab in the host
+lxc.mount.auto = proc:rw
+lxc.mount.auto = sys:rw
+lxc.mount.auto = cgroup:mixed
+lxc.mount.entry = tmpfs dev/shm tmpfs rw,nosuid,nodev,create=dir 0 0
+lxc.mount.entry = tmpfs run tmpfs rw,nosuid,nodev,mode=755,create=dir 0 0
+lxc.mount.entry = tmpfs run/lock tmpfs rw,nosuid,nodev,noexec,relatime,size=5120k,create=dir 0 0
+lxc.mount.entry = debugfs sys/kernel/debug debugfs rw,relatime 0 0
+lxc.mount.entry = mqueue dev/mqueue mqueue rw,relatime,create=dir 0 0
+lxc.mount.entry = hugetlbfs dev/hugepages hugetlbfs rw,relatime,create=dir 0 0
 
 # Disallow module (un)loading
 lxc.cap.drop = sys_module
