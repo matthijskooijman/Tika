@@ -9,3 +9,6 @@ spamd\[[0-9]+\]: spamd: server started on UNIX domain socket /var/run/spamd.sock
 spamd\[[0-9]+\]: pyzor: \[[0-9]+\] error: TERMINATED, signal 15 \(000f\)
 spamd\[[0-9]+\]: spamd: Tell: Removing remote for [a-zA-Z0-9_-]+:[0-9]+ in [0-9.]+ seconds, [0-9]+ bytes$
 
+# Fixes from https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=755374
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ (spamd|check|re(port|voke))\[[[:digit:]]+\]: (spamd: )?result: [.YN] [ [:digit:]-]+ - ([._[:alnum:],]+ )?scantime=[[:digit:].]+,size=[[:digit:]]+,(user=[^,]+,uid=[[:digit:]]+,required_score=[[:digit:].]+,rhost=[._[:alnum:]-]+,raddr=[[:xdigit:].:]+,rport=[/[:alnum:].-]+,)?mid=(<[^[:space:]]+>|\(unknown\))(rmid=(<[^[:space:]]+>|\(unknown\)),)?,(bayes=[.[:digit:]]+(e-[[:digit:]]+)?,)?autolearn=(ham|spam|no|disabled|unavailable)( autolearn_force=(yes|no))?(,shortcircuit=(ham|spam|no))? *$
+^\w{3} [ :[:digit:]]{11} [._[:alnum:]-]+ (spamd|check|re(port|voke))\[[[:digit:]]+\]:( spamd:)? connection from [._[:alnum:]-]+ \[[.:[:xdigit:]]+\]:[[:digit:]]+ (at|to) port [[:digit:]]+(, fd [[:digit:]]+)?$
