@@ -24,6 +24,27 @@ server {
 		set $uwsgi_app app-blosxom;
 		include uwsgi;
 	}
+
+	# Block Baidu from eating up CPU time through all kinds of -tags pages.
+	# These pages already have noindex tags, but they're still being
+	# crawled (mostly by Baidu). At 2015.12.12, a robots.txt entry
+	# blocking these was added, but until it is clear that that
+	# actually works, this fixes the direct problem.
+	#
+	# This uses an ugly hack to allow two conditions, taken from
+        # http://rosslawley.co.uk/archive/old/2010/01/04/nginx-how-to-multiple-if-statements/
+	# Slightly modified to use a block1 variable, since just a block
+	# variable didn't seem to work.
+	if ($http_user_agent ~* Baiduspider) {
+		set $block1 Y;
+	}
+	if ($args ~ ^-tags=) {
+		set $block "${block1}Y";
+	}
+
+	if ($block = YY) {
+		return 403;
+	}
 }
 
 server {
