@@ -35,6 +35,9 @@ server {
 
 	try_files $uri /app.php?$args;
 
+	# Satisfy the setup, which checks if the .htaccess file is working
+	rewrite ^/setup\/webserver-test$ /setup/tests/webservercheck.json;
+
 	# Enable PHP
 	include enable-php;
 }
