@@ -1,11 +1,20 @@
 # Allow authenticated SMTP connections for users to submit mail. We delegate
 # the authentication to dovecot, so we can guarantee people can just log in
 # with the same credentials they use for IMAP.
+# Both PLAIN and LOGIN are allowed, since Windows needs LOGIN.
 dovecot_plain:
   driver = dovecot
-  # Support only PLAIN logins (note that LOGIN is also plain text, but
-  # deprecated, so we don't support it).
   public_name = PLAIN
+  # Connect to dovecot's auth process using this socket
+  server_socket = /var/run/dovecot/auth-client
+  # Store the first auth token (username) as $authenticated_id
+  server_set_id = $auth1
+  # Only allow authentication over TLS
+  server_advertise_condition = ${if eq{$tls_cipher}{}{no}{yes}}
+
+dovecot_login:
+  driver = dovecot
+  public_name = LOGIN
   # Connect to dovecot's auth process using this socket
   server_socket = /var/run/dovecot/auth-client
   # Store the first auth token (username) as $authenticated_id
