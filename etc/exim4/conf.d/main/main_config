@@ -88,4 +88,9 @@ log_selector = +subject +tls_peerdn +tls_certificate_verified -rejected_header
 # commonly block port 25 outgoing).
 daemon_smtp_ports = 25 : 465 : 587
 
+# Do not keep any environment variables when exim is ran, to prevent security
+# issues (this is the default since CVE-2016-1531, but making the default
+# explicit in the config prevents a warning about the changed default).
+keep_environment =
+
 # vim: set sts=2 expandtab sw=2 ai:
