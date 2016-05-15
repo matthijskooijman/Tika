@@ -33,7 +33,7 @@ hostlist fetchmail_hosts = 10.42.0.16
 
 # Don't reject spam from these hosts, since they are known dumb, but trusted
 # relays. They will only send rejects to the wrong people.
-hostlist dont_reject_spam_hosts = *.utsp.utwente.nl : *.snt.utwente.nl : 10.42.0.0/24
+hostlist dont_reject_spam_hosts = *.utsp.utwente.nl : *.snt.utwente.nl : *.spullenmannen.nl : 10.42.0.0/24
 
 # Let exim know how the rest of the world will try to reach us. The
 # stmp transport also uses this macro for its helo command and any
