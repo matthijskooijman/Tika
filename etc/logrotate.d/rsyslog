@@ -1,0 +1,13 @@
+/var/log/rsyslog/*.log
+/var/log/rsyslog/syslog
+{
+	rotate 4
+	weekly
+	missingok
+	compress
+	delaycompress
+	sharedscripts
+	postrotate
+		invoke-rc.d rsyslog rotate > /dev/null
+	endscript
+}
