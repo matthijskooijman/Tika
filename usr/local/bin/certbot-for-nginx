@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+
+import subprocess
+import argparse
+import sys
+import re
+import os
+
+parser = argparse.ArgumentParser(
+# Make sure we preserve paragraph breaks in description and epilog
+  formatter_class=argparse.RawDescriptionHelpFormatter,
+  description=
+"""
+Generate SSL certificate for all domains in an nginx config file.
+""",
+)
+parser.add_argument("file", help="The nginx config file to process")
+parser.add_argument("--no-dry-run", action='store_true', help="Do not Add --dry-run to the command")
+parser.add_argument("--expand", action='store_true', help="Add --expand to the command")
+
+opts = parser.parse_args()
+
+command = ['certbot', 'certonly', '--non-interactive', '--webroot', '--verbose']
+
+if not opts.no_dry_run:
+    command.append('--dry-run')
+
+if opts.expand:
+    command.append('--expand')
+
+def process(line):
+    match = re.match('.*server_name *(.*);', line)
+    if match:
+        domains = match.group(1).split(' ')
+        parts = domains[0].split('.', 1)
+        directory = "/data/www/{}/htdocs/{}".format(parts[1], parts[0])
+
+        if not os.path.isdir(directory):
+            os.stderr.write("Not a directory: {}".format(directory))
+            sys.exit(1)
+
+        command.extend(['-w', directory])
+
+        # Sort domains to ensure the root domain comes first (e.g.
+        # example.org before www.example.org)
+        for domain in sorted(domains, key=len):
+            command.extend(['-d', domain])
+
+
+with open(opts.file) as f:
+    for line in f:
+        process(line)
+
+print(' '.join(command))
+sys.exit(subprocess.call(command))
