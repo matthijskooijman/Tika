@@ -43,6 +43,11 @@ server {
 		auth_basic_user_file /data/www/evolution-events.nl/admin.htpasswd;
 		autoindex on;
 	}
+	location /private/foto {
+		auth_basic "Evolution Events";
+		auth_basic_user_file /data/www/evolution-events.nl/admin-and-guest.htpasswd;
+		autoindex on;
+	}
 
 	# Enable PHP
 	include enable-php;
