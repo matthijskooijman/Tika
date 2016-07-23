@@ -1,16 +1,12 @@
+# This redirects all unknown hosts requested on HTTP (e.g. all
+# virtual hosts without a listen 80 entry) to HTTPS
 server {
 	listen 80 default_server;
 	listen [::]:80 default_server ipv6only=on;
 
-	server_name default;
-	root /data/www/default;
+	server_name _;
 
-	location / {
-		# First attempt to serve request as file, then
-		# as directory, then fall back to displaying main
-		# index.html
-		try_files $uri $uri/ /index.html;
-	}
+	return 301 https://$host$request_uri;
 }
 
 # vim: set ts=8 sts=8 sw=8 noexpandtab filetype=conf:
