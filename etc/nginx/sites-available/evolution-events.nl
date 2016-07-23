@@ -1,8 +1,12 @@
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name www.evolution-events.nl evolution-events.nl;
+
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/$domain/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/$domain/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
 
 	# Enable PHP
 	include enable-php;
@@ -11,20 +15,28 @@ server {
 }
 
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name exit3.evolution-events.nl;
+
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/evolution-events.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
 
 	# Enable PHP
 	include enable-php;
 }
 
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name orga.evolution-events.nl;
+
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/evolution-events.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
 
 	location /private {
 		auth_basic "Evolution Events";
@@ -37,21 +49,29 @@ server {
 }
 
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name dorestad1493.evolution-events.nl dorestad.evolution-events.nl;
 
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/evolution-events.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+
 	# Enable PHP
 	include enable-php;
 }
 
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name xenophobia.evolution-events.nl;
 
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/evolution-events.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+
 	# Enable PHP
 	include enable-php;
 
@@ -70,11 +90,15 @@ server {
 }
 
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name exodus.evolution-events.nl;
 
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/evolution-events.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+
 	# Enable PHP
 	include enable-php;
 
@@ -93,11 +117,15 @@ server {
 }
 
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name deadfoxjunction.evolution-events.nl;
 
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/evolution-events.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+
 	# Enable PHP
 	include enable-php;
 
@@ -116,126 +144,185 @@ server {
 }
 
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name raganorck.evolution-events.nl;
 
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/evolution-events.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+
 	# Enable PHP
 	include enable-php;
 }
 
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name foto.evolution-events.nl;
 
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/evolution-events.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+
 	# Enable PHP
 	include enable-php;
 }
 
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name hangout.evolution-events.nl henkout.evolution-events.nl;
-	return 301 https://plus.google.com/hangouts/_/event/c098h01pseus1le68vkubv34r5k?authuser=0&hl=en;
+
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/evolution-events.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+
+	location /.well-known/ {
+		# Regular handling
+	}
+	location / {
+		return 301 https://plus.google.com/hangouts/_/event/c098h01pseus1le68vkubv34r5k?authuser=0&hl=en;
+	}
 }
 
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name extraterrestrial.evolution-events.nl;
 
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/evolution-events.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+
 	# Enable PHP
 	include enable-php;
 }
 
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name files.evolution-events.nl;
+
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/evolution-events.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+
 }
 
 
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name supersecretmissionx.evolution-events.nl ssmx.evolution-events.nl;
 
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/evolution-events.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+
 	# Enable PHP
 	include enable-php;
 }
 
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name larpsux.evolution-events.nl;
 
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/evolution-events.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+
 	# Enable PHP
 	include enable-php;
 }
 
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name extinction.evolution-events.nl;
 
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/evolution-events.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+
 	# Enable PHP
 	include enable-php;
 }
 
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name exit.evolution-events.nl;
 
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/evolution-events.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+
 	# Enable PHP
 	include enable-php;
 }
 
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name exit2.evolution-events.nl;
 
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/evolution-events.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+
 	# Enable PHP
 	include enable-php;
 }
 
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name blackbox.evolution-events.nl;
 
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/evolution-events.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+
 	# Enable PHP
 	include enable-php;
 }
 
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name lextalionis.evolution-events.nl;
 
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/evolution-events.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+
 	# Enable PHP
 	include enable-php;
 }
 
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name noxarabica.evolution-events.nl;
+
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/evolution-events.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
 
 	# Enable PHP
 	include enable-php;
@@ -255,10 +342,14 @@ server {
 }
 
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name orenda.evolution-events.nl;
+
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/evolution-events.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
 
 	# Enable PHP
 	include enable-php;
