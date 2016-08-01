@@ -47,7 +47,7 @@ domains = collections.defaultdict(list)
 
 # Find out the domains we need
 for config in os.listdir(nginx_config_dir):
-  print(config)
+  #print(config)
   with open(os.path.join(nginx_config_dir, config)) as f:
     for line in f:
       match = nginx_vhost_re.match(line)
@@ -58,12 +58,12 @@ for config in os.listdir(nginx_config_dir):
 
       match = split_vhost_re.match(vhost)
       if not match or not simple_vhost_re.match(vhost):
-        print("Skipping non-trivial vhost: {}".format(vhost))
+        #print("Skipping non-trivial vhost: {}".format(vhost))
         continue
 
       (sub, domain) = match.groups('')
 
-      print("\t{}".format(vhost))
+      #print("\t{}".format(vhost))
 
       domains[domain].append((sub, vhost, aliases.split()))
 
@@ -82,13 +82,13 @@ for (d, subdomains) in domains.items():
       # Write out the awstats config file
       subdomain_awstats_file = os.path.join(awstats_dir, awstats_config_file % primary)
 
-      print("Writing {}".format(subdomain_awstats_file))
+      #print("Writing {}".format(subdomain_awstats_file))
       with open(subdomain_awstats_file , 'w') as out:
         out.write(awstats_conf)
 
 def create_dir(dirname):
   if not os.path.isdir(dirname):
-    print("Creating {}".format(dirname))
+    #print("Creating {}".format(dirname))
     os.mkdir(dirname)
     # Chown to awstats_user, keep gid
     os.chown(dirname, awstats_user, os.stat(dirname).st_gid)
@@ -117,7 +117,6 @@ else:
 for (d, subdomains) in domains.items():
   for (s, primary, aliases) in subdomains:
     subdomain_logfile = os.path.join(logs_dir, d, s, log_file + dateext)
-    print(subdomain_logfile)
 
     # Call awstats. We explicitly pass in a LogFile, in case --after-logrotate
     # is given. The config parameter points to the middle part of the
@@ -125,12 +124,21 @@ for (d, subdomains) in domains.items():
     # part. We check if the file exists, since rotation might not have been
     # happened (when the file was empty, for example)
     if os.path.exists(subdomain_logfile):
-      subprocess.call([ 'sudo'
+      try:
+        subprocess.check_output(
+                      [ 'sudo'
                       , '-u', '#{}'.format(awstats_user)
                       , awstats
                       , '-config={}'.format(primary)
                       , '-update'
                       , '-LogFile={}'.format(subdomain_logfile)
-                      ])
-    
+                      ], stderr=subprocess.STDOUT)
+      except subprocess.CalledProcessError as e:
+          msg = "Running awstats for {} failed with exit status {}\n"
+          sys.stderr.write(msg.format(primary, e.returncode))
+          if e.output:
+            sys.stderr.write("Output:\n")
+            sys.stderr.buffer.write(e.output)
+          else:
+            sys.stderr.write("No output\n")
 # vim: set sw=2 sts=2 expandtab autoindent:
