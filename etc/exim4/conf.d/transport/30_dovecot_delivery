@@ -1,5 +1,15 @@
 dovecot_deliver:
   driver = pipe
+
+  # Copy any existing spam headers, since spamassassin replaces them instead of
+  # adding to them. This helps to debug spamchecking on upstream mailservers.
+  # This use an if to prevent adding the new header when no existing header is
+  # present.
+  headers_add = X-Original-Spam-Status: ${if !eq{$rheader_x-spam-status:}{}{$rheader_x-spam-status:}fail}
+  headers_add = X-Original-Spam-Checker-Version: ${if !eq{$rheader_x-spam-checker-version:}{}{$rheader_x-spam-checker-version:}fail}
+  headers_add = X-Original-Spam-Level: ${if !eq{$rheader_x-spam-level:}{}{$rheader_x-spam-level:}fail}
+  headers_add = X-Original-Spam-Report: ${if !eq{$rheader_x-spam-report:}{}{$rheader_x-spam-report:}fail}
+
   # Let spamassassin scan the message, using the userpreferences of the user
   # the message will be delivered to. Also, don't scan any messages > 100K.
   transport_filter = /usr/bin/spamc -s 102400 -u "${extract{mail}{$address_data}}" --socket=/var/run/spamd.socket
