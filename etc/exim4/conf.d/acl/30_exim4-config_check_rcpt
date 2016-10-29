@@ -121,19 +121,6 @@ acl_check_rcpt:
   require
     verify = recipient
 
-
-  # Warn if the sender host does not have valid reverse DNS.
-  # 
-  # If your system can do DNS lookups without delay or cost, you might want
-  # to enable this.
-  # If sender_host_address is defined, it's a remote call.  If
-  # sender_host_name is not defined, then reverse lookup failed.  Use
-  # this instead of !verify = reverse_host_lookup to catch deferrals
-  # as well as outright failures.
-  warn
-    message = X-Host-Lookup-Failed: Reverse DNS lookup failed for $sender_host_address (${if eq{$host_lookup_failed}{1}{failed}{deferred}})
-    verify = reverse_host_lookup
-
   # At this point, the address has passed all the checks that have been
   # configured, so we accept it unconditionally.
 
