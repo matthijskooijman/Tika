@@ -42,7 +42,7 @@ acl_check_data:
 
   # Deny messages that are really obvious spam (>12 score)
   deny
-    condition = ${if >{$spam_score_int}{120}}
+    condition = ${if >{$spam_score_int}{80}}
     message = Message was classified as spam
 
   # Accept any other messages
