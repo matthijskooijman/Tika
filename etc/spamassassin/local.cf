@@ -47,10 +47,16 @@
 #   should be precreated and be writable to the user running spamd (nobody).
 bayes_path /data/mail/spamassassin/bayes
 
-# dovecot is configured to run both learn and report on spam messages, so don't
-# double-train those messages (there is no bayes_learn_during_revoke, so we
-# can't just always only use report/revoke from dovecot).
-bayes_learn_during_report 0
+# Dovecot-antispam uses report on spam messages, so make sure they get reported
+# to e.g. pyzor and learned by bayes. Ham messages are only learned, since at
+# least pyzor does not support anonymous revoking anyway. (Also, there is no
+# bayes_learn_during_revoke).
+bayes_learn_during_report 1
+
+# Learn messages just to the journal, without syncing the token files.
+# Spamassassin will opportunistically sync the journal regularly. This slightly
+# speeds up the learning process and reduces contention on the token files.
+bayes_learn_to_journal 1
 
 #   Bayesian classifier auto-learning (default: 1)
 #

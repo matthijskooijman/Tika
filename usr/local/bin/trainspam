@@ -1,25 +1,31 @@
 #!/bin/sh -e
 
-# spamc doesn't support learning (bayes) and reporting (pyzor, razor2) in a
-# single command, so this wrapper calls it twice to handle both.
+# spamc doesn't support learning as ham (bayes) and revoking (pyzor, razor2) in
+# a single command, so this wrapper was written to handle both. However, later
+# revoking was disabled, so this wrapper now only serves to run the learning in
+# the background
+
+COMMAND="/usr/bin/spamc --socket=/var/run/spamd.socket"
 
 if [ "$1" != "ham" -a "$1" != "spam" ]; then
         echo Single argument should be "spam" or "ham"
         exit 1
 fi
 
-
 TMPFILE=`mktemp`
-trap 'rm -f $TMPFILE' INT TERM EXIT
+trap 'rm -f "$TMPFILE"' INT TERM
 
 cat > "$TMPFILE"
 
-COMMAND="/usr/bin/spamc --socket=/var/run/spamd.socket"
+(
+    trap 'rm -f "$TMPFILE"' INT TERM EXIT
 
-if [ "$1" = "ham" ]; then
+    if [ "$1" = "ham" ]; then
         cat "$TMPFILE" | $COMMAND --learntype=ham
-        cat "$TMPFILE" | $COMMAND --reporttype=revoke
-elif [ "$1" = "spam" ]; then
+        # cat "$TMPFILE" | $COMMAND --reporttype=revoke
+    elif [ "$1" = "spam" ]; then
         cat "$TMPFILE" | $COMMAND --learntype=spam
-        cat "$TMPFILE" | $COMMAND --reporttype=report
-fi
+    fi
+) &
+
+exit 0
