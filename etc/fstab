@@ -21,6 +21,9 @@ proc                        /proc           proc    defaults                0   
 # option, any mounts below /containers are shared with the container (but not
 # vice versa). This also means that mounts can be added here while the
 # container is running, without needing a container restart.
+/etc/skel            /containers/template/etc/skel          auto    nofail,defaults,bind,ro      0   0
+/data/users          /containers/template/data/users        auto    nofail,defaults,bind         0   0
+
 /etc/skel            /containers/log/etc/skel               auto    nofail,defaults,bind,ro      0   0
 /data/users          /containers/log/data/users             auto    nofail,defaults,bind         0   0
 /data/log            /containers/log/data/log               auto    nofail,defaults,bind         0   0
@@ -52,6 +55,3 @@ proc                        /proc           proc    defaults                0   
 /data/vcs            /containers/web/data/vcs               auto    nofail,defaults,bind         0   0
 /data/apt-repository /containers/web/data/apt-repository    auto    nofail,defaults,bind         0   0
 /data/applications   /containers/web/data/applications      auto    nofail,defaults,bind         0   0
-
-/etc/skel            /containers/template/etc/skel          auto    nofail,defaults,bind,ro      0   0
-/data/users          /containers/template/data/users        auto    nofail,defaults,bind         0   0
