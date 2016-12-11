@@ -12,12 +12,10 @@ iface br-inet inet static
         address 94.142.244.14
         netmask 255.255.255.0
         gateway 94.142.244.254
-        post-up ip addr add 94.142.244.47/24 dev br-inet
         post-up ip addr add 94.142.245.160/32 dev br-inet
         post-up ip addr add 94.142.245.161/32 dev br-inet
         post-up ip addr add 94.142.245.162/32 dev br-inet
         post-up ip addr add 94.142.245.163/32 dev br-inet
-        post-down ip addr add 94.142.244.47/24 dev br-inet
         post-down ip addr del 94.142.245.160/32 dev br-inet
         post-down ip addr del 94.142.245.161/32 dev br-inet
         post-down ip addr del 94.142.245.162/32 dev br-inet
