@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # The dir containing vserver configuration
-LXC_DIR=/var/lib/lxc
+LXC_DIR=/etc/lxc
 
 # The vserver to use as a template
 TEMPLATE=$1
