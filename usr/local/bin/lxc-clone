@@ -11,6 +11,7 @@ TEMPLATE_CONF="$LXC_DIR/$TEMPLATE/config"
 TARGET_CONFDIR="$LXC_DIR/$TARGET/"
 TARGET_CONF="$TARGET_CONFDIR/config"
 TARGET_HOSTNAME="$TARGET.local"
+FSTAB=/etc/fstab
 
 # Exit on errors
 set -e 
@@ -51,6 +52,10 @@ if [ ! "$#" -eq 2 ]; then
 	exit 1
 fi
 
+if ! (cd /; git diff-index --quiet HEAD "$FSTAB"); then
+    echo "$FSTAB has uncommited changes"
+    exit 1;
+fi
 
 if [ ! -f "$TEMPLATE_CONF" ]; then
     echo "(configuration for) template container '$TEMPLATE' not found?"
@@ -158,6 +163,10 @@ for file in etc/mailname etc/hostname; do
     sudo sed -i "s/$TEMPLATE/$TARGET/" "$TARGET_ROOTFS/$file"
 done
 
+echo "Updating fstab & mounting filesystems..."
+(echo; grep --fixed-strings "$TEMPLATE_ROOTFS" "$FSTAB") | sed "s|$TEMPLATE_ROOTFS|$TARGET_ROOTFS|" | sudo tee --append "$FSTAB" > /dev/null
+sudo mount -a
+
 echo "Regenerating SSH keys..."
 # Regen ssh keys (and prevent sshd from starting, since that prevents
 # lxc-execute from returning...
@@ -184,7 +193,7 @@ $GIT push origin "$TARGET:$TARGET"
 # Commit the configuration
 echo "Commiting configuration for container '$TARGET'"
 (cd /; sudo git add "$TARGET_CONF")
-(cd /; sudo git commit "$TARGET_CONF" --edit --message "lxc: Add $TARGET container configuration") || true
+(cd /; sudo git commit "$TARGET_CONF" "$FSTAB" --edit --message "lxc: Add $TARGET container configuration") || true
 
 echo "Finished creating container '$TARGET'"
 echo "You can now start it using 'lxc-start -d -n $TARGET' and then"
