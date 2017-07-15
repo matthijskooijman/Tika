@@ -1,16 +1,11 @@
-deb http://ftp.nl.debian.org/debian/ wheezy main non-free contrib
-deb-src http://ftp.nl.debian.org/debian/ wheezy main non-free contrib
+deb http://ftp.nl.debian.org/debian stretch main contrib non-free
+deb http://security.debian.org/ stretch/updates main contrib non-free
 
-deb http://security.debian.org/ jessie/updates main contrib non-free
-deb-src http://security.debian.org/ jessie/updates main contrib non-free
+deb http://ftp.nl.debian.org/debian stretch-backports main
+deb http://ftp.nl.debian.org/debian buster main contrib non-free
+deb http://ftp.nl.debian.org/debian sid main contrib non-free
 
-deb http://ftp.nl.debian.org/debian jessie main contrib non-free
-deb-src http://ftp.nl.debian.org/debian jessie main contrib non-free
-
-deb http://ftp.nl.debian.org/debian/ sid main non-free contrib
-deb-src http://ftp.nl.debian.org/debian/ sid main non-free contrib
-
-deb ftp://ftp.vuurmuur.org/debian/ wheezy svn
+deb ftp://ftp.vuurmuur.org/debian/ sid svn
 
 # Our own custom repository
 deb http://apt.stderr.nl stderr main
