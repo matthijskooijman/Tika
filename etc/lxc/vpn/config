@@ -30,6 +30,7 @@ lxc.pts = 256
 # Set up /dev for systemd
 lxc.kmsg = 0
 lxc.autodev = 1
+lxc.hook.autodev = sh -c "cd ${LXC_ROOTFS_MOUNT}/dev; mkdir net; mknod net/tun c 10 200; chmod 0666 net/tun"
 
 # Deny all devices, except the following
 lxc.cgroup.devices.deny = a
@@ -54,6 +55,8 @@ lxc.cgroup.devices.allow = c 136:* rwm
 lxc.cgroup.devices.allow = c 5:2 rwm
 # rtc
 lxc.cgroup.devices.allow = c 254:0 rwm
+# tun
+lxc.cgroup.devices.allow = c 10:200 rwm
 
 # Mount special filesystems. Most of these ar normally mounted by systemd on
 # startup, but by pre-mounting them here, systemd can run without cap_sys_admin.
@@ -74,8 +77,8 @@ lxc.cap.drop = sys_module
 lxc.cap.drop = sys_rawio
 # Disallow changing the clock
 lxc.cap.drop = sys_time
-# Disallow changing network settings
-lxc.cap.drop = net_admin
+# Allow changing network settings, for openvpn
+# lxc.cap.drop = net_admin
 # Disallow changing auditing settings
 lxc.cap.drop = audit_control
 # Disallow various admin tasks (probably has side-effects)
