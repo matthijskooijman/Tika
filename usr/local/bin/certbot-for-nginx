@@ -36,7 +36,7 @@ def process(line):
         directory = "/data/www/{}/htdocs/{}".format(parts[1], parts[0])
 
         if not os.path.isdir(directory):
-            os.stderr.write("Not a directory: {}".format(directory))
+            sys.stderr.write("Not a directory: {}\n".format(directory))
             sys.exit(1)
 
         command.extend(['-w', directory])
