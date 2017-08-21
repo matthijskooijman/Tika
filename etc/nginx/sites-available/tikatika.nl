@@ -56,8 +56,8 @@ server {
 	listen 443 ssl;
 	listen [::]:443 ssl;
 
-	ssl_certificate     ssl/mail.tikatika.nl.crt-chain;
-	ssl_certificate_key ssl/mail.tikatika.nl.key;
+	ssl_certificate     /etc/letsencrypt/live/tikatika.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/tikatika.nl/privkey.pem;
 	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
 
 	server_name mail.tikatika.nl;
