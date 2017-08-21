@@ -6,6 +6,9 @@ server {
 
 	server_name _;
 
+	# Should never be used, but it should exist to prevent errors
+	root /data/www/default;
+
 	return 301 https://$host$request_uri;
 }
 
