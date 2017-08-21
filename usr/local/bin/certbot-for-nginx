@@ -29,7 +29,7 @@ if opts.expand:
     command.append('--expand')
 
 def process(line):
-    match = re.match('.*server_name *(.*);', line)
+    match = re.match('^\s*server_name\s*(.*);', line)
     if match:
         domains = match.group(1).split(' ')
         parts = domains[0].split('.', 1)
