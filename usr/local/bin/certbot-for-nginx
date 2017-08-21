@@ -20,7 +20,7 @@ parser.add_argument("--expand", action='store_true', help="Add --expand to the c
 
 opts = parser.parse_args()
 
-command = ['certbot', 'certonly', '--non-interactive', '--webroot', '--verbose']
+command = ['certbot', 'certonly', '--non-interactive', '--webroot', '--verbose', '--config', '/etc/letsencrypt/config.ini']
 
 if not opts.no_dry_run:
     command.append('--dry-run')
