@@ -33,6 +33,10 @@ def process(line):
     if match:
         domains = match.group(1).split(' ')
         parts = domains[0].split('.', 1)
+        if len(parts) < 2:
+            sys.stderr.write("Not a valid domain: {}\n".format(domains[0]))
+            sys.exit(1)
+
         directory = "/data/www/{}/htdocs/{}".format(parts[1], parts[0])
 
         if not os.path.isdir(directory):
