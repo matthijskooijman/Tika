@@ -67,6 +67,9 @@ server {
 
 	# Enable PHP
 	include enable-php;
+
+	# Allow longer time for cache warmup in setup.php
+	uwsgi_read_timeout 300;
 }
 
 server {
