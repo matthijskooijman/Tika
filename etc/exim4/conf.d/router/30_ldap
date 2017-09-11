@@ -63,6 +63,7 @@ ldap_lookup_real:
   address_data = ${lookup ldapdn {LDAPURL??sub?(&(uid=Q_LOCALPART)(objectClass=maroesjaSystemIdentity))}{$value}fail}
   # then look up the mail attribute of the parent object and forward the
   # message to that address.
+  # TODO: Isn't that ugly?
   data = ${lookup ldap {LDAPSERVER/PARENT_DN?mail?base?(objectClass=maroesjaPerson)}{$value}fail}
 
 # Forward the mail to any members configured
@@ -83,6 +84,10 @@ ldap_group_member:
     {<, ${extract{member}{$address_data}}} \
     {${lookup ldap {LDAPSERVER/$item?mail?base?}}} \
   }, ${extract{rfc822member}{$address_data}}
+  # TODO: This does not support group members that have no mail attribute of
+  # their own - e.g. identities that only receive mail from their group
+  # memberships. This would probably require a special @ldapdn "domain name"
+  # that gets short circuited to a ldap lookup below.
 
 # Router that looks up the maroesjaMailIdentity to which to deliver the
 # message, filling $address_data and then always fails. This allows the next
