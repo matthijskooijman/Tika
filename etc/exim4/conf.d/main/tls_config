@@ -2,8 +2,8 @@
 tls_advertise_hosts = *
 
 # Use the dovecot self-signed ceritificates for now
-tls_certificate = /etc/exim4/ssl/mail.tikatika.nl.crt-chain
-tls_privatekey = /etc/exim4/ssl/mail.tikatika.nl.key
+tls_certificate = /etc/letsencrypt/live/tikatika.nl/fullchain.pem
+tls_privatekey = /etc/letsencrypt/live/tikatika.nl/privkey.pem
 
 # Use SMTPS (i.e., TLS from the start instead of using STARTTLS) on port 465.
 # This protocol is really deprecated, but some Outlook versions might need it
