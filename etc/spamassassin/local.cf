@@ -71,6 +71,11 @@ bayes_ignore_header X-Original-Spam-Status
 bayes_ignore_header X-Original-Spam-Checker-Version
 bayes_ignore_header X-Original-Spam-Report
 bayes_ignore_header X-Original-Spam-Level
+bayes_ignore_header X-Preliminary-Spam-Score
+
+# Reduce negative score for envelope matching received headers, this seems to
+# match spam more often than ham anyway.
+score RP_MATCHES_RCVD -0.1
 
 pyzor_options --homedir /data/mail/spamassassin/pyzor
 
