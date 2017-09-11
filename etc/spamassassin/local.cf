@@ -68,7 +68,7 @@ bayes_learn_to_journal 1
 #
 # Ignore spam headers from upstream mail servers
 bayes_ignore_header X-Original-Spam-Status
-bayes_ignore_header X-Original-Spam-Checker-Versiuon
+bayes_ignore_header X-Original-Spam-Checker-Version
 bayes_ignore_header X-Original-Spam-Report
 bayes_ignore_header X-Original-Spam-Level
 
