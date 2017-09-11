@@ -77,6 +77,11 @@ ldap_group_member:
   # maroesjaMailGroup (whose attributes we store in $address_data)
   address_data = ${lookup ldap {LDAPURL?rfc822member,member?sub?(&(|(mail=Q_ADDR)(mailAlternateAddress=Q_ADDR))(objectClass=maroesjaMailGroup))}{$value}fail}
 
+  # Allow plus-addressing, anything after a plus (including the plus itself)
+  # will be stripped from $local_part before the lookup
+  local_part_suffix = +*
+  local_part_suffix_optional
+
   # Then forward the message to any members of the group. First, look up the
   # mail address (if any) of each member and append any rfc822members
   # directly. This gracefully ignores any members without an email address.
@@ -99,6 +104,11 @@ ldap_lookup_identity:
   driver = redirect
   # If the domain is in virtual_domains
   domains = +virtual_domains
+
+  # Allow plus-addressing, anything after a plus (including the plus itself)
+  # will be stripped from $local_part before the lookup
+  local_part_suffix = +*
+  local_part_suffix_optional
 
   # then look up a MailIdentity with the right mail or mailAlternateAddress attribute
   address_data = ${lookup ldap {LDAPURL?mail,mailHost,mailForwardingAddress,uniqueIdentifier?sub?(&(|(mail=Q_ADDR)(mailAlternateAddress=Q_ADDR))(objectClass=maroesjaMailIdentity))}}
@@ -126,6 +136,11 @@ ldap_person_other_mailhost:
     {!eqi {${extract{mailHost}{$address_data}}} {$primary_hostname}} \
   }}
 
+  # Allow plus-addressing, anything after a plus (including the plus itself)
+  # will be stripped from $local_part before the lookup
+  local_part_suffix = +*
+  local_part_suffix_optional
+
   # Then, forward to the other mailHost
   route_data = ${extract{mailHost}{$address_data}}
   transport = remote_smtp
@@ -138,6 +153,11 @@ ldap_forwarding_address:
   domains = +virtual_domains
   # If the ldap lookup returned data
   condition = $address_data
+
+  # Allow plus-addressing, anything after a plus (including the plus itself)
+  # will be stripped from $local_part before the lookup
+  local_part_suffix = +*
+  local_part_suffix_optional
 
   # then forward the message to any mailForwardingAddresses. Multiple
   # attributes are already comma-separated by the ldap lookup. If there are no
@@ -158,6 +178,11 @@ ldap_deliver_local:
   debug_print = "R: ldap_deliver_local for $local_part@$domain: Doing local delivery to ${extract{uniqueIdentifier}{$address_data}} if the mailHost is us"
   driver = accept
   domains = +virtual_domains
+
+  # Allow plus-addressing, anything after a plus (including the plus itself)
+  # will be stripped from $local_part before the lookup
+  local_part_suffix = +*
+  local_part_suffix_optional
 
   condition = ${if and { \
     # If the ldap lookup returned data
