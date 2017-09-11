@@ -2,7 +2,7 @@ Explanation: see http://www.argon.org/~roderick/apt-pinning.html
 Explanation: Adapted to make all priorties higher than the default of 500 and
 Explanation: remove the -1 fallback
 Package: *
-Pin: release o=Debian,a=stable
+Pin: release o=Debian,n=stretch
 Pin-Priority: 990
 
 Package: *
@@ -10,7 +10,7 @@ Pin: release o=apt.stderr.nl,a=stderr
 Pin-Priority: 990
 
 Package: *
-Pin: release o=Debian Backports,a=wheezy-backports
+Pin: release o=Debian Backports
 Pin-Priority: 900
 
 Package: *
