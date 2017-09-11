@@ -7,6 +7,11 @@ LDAPSERVER=ldap://ldap.local:389
 LDAPBASE=dc=tika,dc=stderr,dc=nl
 LDAPURL=LDAPSERVER/LDAPBASE
 
+# For all intents and purposes (and mostly how the outside world sees us), we
+# are tika, not mail.local. This is used for qualifying addresses, in received
+# headers, in HELO commands, etc.
+primary_hostname = tika.stderr.nl
+
 # List of domains for which full e-mail addresses are configured on the LDAP
 # directory. This list is taken from LDAP as well. Since an ldapm query
 # returns results separated with newlines, we change the list separator to
@@ -34,16 +39,6 @@ hostlist fetchmail_hosts = 10.42.0.16
 # Don't reject spam from these hosts, since they are known dumb, but trusted
 # relays. They will only send rejects to the wrong people.
 hostlist dont_reject_spam_hosts = *.utsp.utwente.nl : *.snt.utwente.nl : *.spullenmannen.nl : 10.42.0.0/24
-
-# Let exim know how the rest of the world will try to reach us. The
-# stmp transport also uses this macro for its helo command and any
-# username@foo.local addresses will be rewritten to use this address instead.
-EXTERNAL_HOSTNAME = tika.stderr.nl
-hosts_treat_as_local = EXTERNAL_HOSTNAME
-
-# Use this domain on any unqualified addresses that get submitted. Since this
-# can come from any container, just use our main hostname.
-qualify_domain = EXTERNAL_HOSTNAME
 
 # The gecos field in /etc/passwd holds not only the name. see passwd(5).
 gecos_pattern = ^([^,:]*)

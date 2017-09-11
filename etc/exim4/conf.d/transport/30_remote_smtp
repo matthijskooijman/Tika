@@ -6,9 +6,5 @@
 remote_smtp:
   debug_print = "T: remote_smtp for $local_part@$domain"
   driver = smtp
-  # Use a different hostname in our helo command, since our
-  # primary_hostname is not in public DNS. EXTERNAL_HOSTNAME is a macro
-  # defined in the main config.
-  helo_data = EXTERNAL_HOSTNAME
 
 # vim: set sts=2 expandtab sw=2 ai:

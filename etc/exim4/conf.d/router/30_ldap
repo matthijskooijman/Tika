@@ -118,14 +118,14 @@ ldap_person_other_mailhost:
     # and mailhost is not empty
     {!eqi {${extract{mailHost}{$address_data}}} {} } \
     # and mailhost is not this host
-    {!eqi {${extract{mailHost}{$address_data}}} {EXTERNAL_HOSTNAME}} \
+    {!eqi {${extract{mailHost}{$address_data}}} {$primary_hostname}} \
   }}
 
   # Then, forward to the other mailHost
   route_data = ${extract{mailHost}{$address_data}}
   transport = remote_smtp
 
-DELIVER_HERE=eqi{${extract{mailHost}{$address_data}}}{EXTERNAL_HOSTNAME}
+DELIVER_HERE=eqi{${extract{mailHost}{$address_data}}}{$primary_hostname}
 # Forward the mail to any mailForwardingAddresses configured
 ldap_forwarding_address:
   debug_print = "R: ldap_person_forward for $local_part@$domain: Forwarding to any mailForwardingAddresses: ${extract{mailForwardingAddress}{$address_data}}"

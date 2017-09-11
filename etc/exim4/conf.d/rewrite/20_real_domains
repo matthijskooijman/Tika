@@ -5,6 +5,6 @@
 # comes from.
 #################################
 
-*@+real_domains $1@EXTERNAL_HOSTNAME E
+*@+real_domains $1@$primary_hostname E
 
 # vim: set sts=2 expandtab sw=2 ai:
