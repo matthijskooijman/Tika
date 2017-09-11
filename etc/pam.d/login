@@ -11,8 +11,13 @@
 # Standard Un*x session setup and teardown.
 @include common-session
 
-# Print the message of the day upon successful login.
-session		optional	pam_motd.so # [1]
+# Prints the message of the day upon successful login.
+# (Replaces the `MOTD_FILE' option in login.defs)
+# This includes a dynamically generated part from /run/motd.dynamic
+# and a static (admin-editable) part from /etc/motd.
+session    optional   pam_motd.so motd=/run/motd.dynamic
+session    optional   pam_motd.so noupdate
+
 # Create a homedir for the user, if there is none yet.
 session		optional	pam_mkhomedir.so
 
