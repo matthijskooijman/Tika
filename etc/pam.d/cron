@@ -6,6 +6,13 @@
 # any other real authentication.
 @include		common-auth
 
-@include		common-account
+# pam_unix does general checks based on NSS info, so it also works for both
+# local and ldap users.
+#
+# This does not include common-account, because
+# that does extended LDAP checks, such as requiring SystemLoginIdentity
+# and checking the host attribute, which isn't appropriate for system
+# accounts running cron stuff.
+account		required	pam_unix.so
 
 @include		common-session
