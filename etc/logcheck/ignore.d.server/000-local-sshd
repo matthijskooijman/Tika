@@ -1,6 +1,7 @@
 sshd\[[0-9]*\]: Received disconnect from [0-9.]*: 11: disconnected by user$
 sshd\[[0-9]*\]: Received disconnect from [0-9.]*: 14: Unable to connect using the available authentication methods \[preauth\]$
 sshd\[[0-9]*\]: Received disconnect from [0-9.]*: (11|3): .* \[preauth\]$
+sshd\[[0-9]*\]: error: Received disconnect from [0-9.]*: (11|3): .* \[preauth\]$
 sshd\[[0-9]*\]: Failed password for root from [0-9.]* port [0-9]* ssh2$
 # See https://bugzilla.mindrot.org/show_bug.cgi?id=2249
 sshd\[[0-9]*\]: PAM service\(sshd\) ignoring max retries; [0-9]+ > [0-9]+
@@ -9,5 +10,17 @@ sshd\[[0-9]*\]: fatal: Read from socket failed: Connection reset by peer \[preau
 sshd\[[0-9]*\]: fatal: Write failed: Connection reset by peer \[preauth\]
 sshd\[[0-9]*\]: error: bind: Address already in use
 sshd\[[0-9]*\]: error: channel_setup_fwd_listener: cannot listen to port: [0-9]+
+sshd\[[0-9]*\]: error: channel_setup_fwd_listener_tcpip: cannot listen to port: [1-9]+
 sshd\[[0-9]*\]: Bad protocol version identification '.*' from [0-9.]+ port [0-9]+$
-sshd\[[0-9]*\]: fatal: Unable to negotiate a key exchange method \[preauth\]
+sshd\[[0-9]*\]: fatal: Unable to negotiate a key exchange method \[preauth\]$
+sshd\[[0-9]*\]: fatal: Write failed: Broken pipe \[preauth\]$
+sshd\[[0-9]*\]: fatal: no hostkey alg \[preauth\]$
+sshd\[[0-9]*\]: fatal: no matching cipher found: client [a-z0-9.@,-]+ server [a-z0-9.@,-]+ \[preauth\]$
+sshd\[[0-9]*\]: Accepted publickey for [a-ZA-Z_-]+ from [0-9.]+ port [0-9]+ ssh2: [DR]SA [0-9a-f:]+$
+sshd\[[0-9]*\]: Disconnecting: Change of username or service not allowed: \([a-zA-Z_-]+,ssh-connection\) -> \([a-zA-Z_-]+,ssh-connection\) \[preauth\]$
+sshd\[[0-9]*\]: Disconnecting: Too many authentication failures for( invalid user)? [a-ZA-Z_-]+ from [0-9.]+ port [0-9]+ ssh2 \[preauth\]$
+sshd\[[0-9]*\]: Bad packet length [0-9]+\. \[preauth\]$
+sshd\[[0-9]*\]: Disconnecting: packet corrupt \[preauth\]$
+sshd\[[0-9]*\]: invalid public DH value: <= 1 \[preauth\]$
+sshd\[[0-9]*\]: Disconnecting: bad client public DH value \[preauth\]$
+sshd\[[0-9]*\]: Protocol major versions differ for [0-9.]+: .*$

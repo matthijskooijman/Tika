@@ -1,4 +1,4 @@
 nslcd\[[0-9]*\]: \[[0-9a-f]*\] "[^"]*": user not found$
 nslcd\[[0-9]*\]: \[[0-9a-f]*\] <passwd="[a-z_-]+"> \(re\)loading /etc/nsswitch.conf$
-nslcd\[[0-9]*\]: \[[0-9a-f]*\] <passwd="[a-z_-]+"> request denied by validnames option$
-nslcd\[[0-9]*\]: \[[0-9a-f]*\] <authc="[a-z_-]+"> request denied by validnames option$
+nslcd\[[0-9]*\]: \[[0-9a-f]*\] <passwd="[^"]*"> request denied by validnames option$
+nslcd\[[0-9]*\]: \[[0-9a-f]*\] <authc="[^"]*"> request denied by validnames option$
