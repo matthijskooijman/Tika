@@ -14,3 +14,6 @@ session		required	pam_ldap.so
 
 # Load locale variables
 session		required	pam_env.so envfile=/etc/default/locale
+
+# Register this login session with systemd
+session		optional	pam_systemd.so
