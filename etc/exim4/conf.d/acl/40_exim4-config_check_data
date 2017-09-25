@@ -24,13 +24,13 @@ acl_check_data:
   # reject it).
   accept
     hosts = +dont_reject_spam_hosts
-    add_header = X-Preliminary-Spam-Score: Not scanned; message from trusted host
+    add_header = :at_start:X-Preliminary-Spam-Score: Not scanned; message from trusted host
 
   # Don't do spamchecking for big messages, they're unlikely to be spam and
   # cost a lot of resources.
   accept
     condition = ${if >{$message_size}{20k}}
-    add_header = X-Preliminary-Spam-Score: Not scanned; message too big
+    add_header = :at_start:X-Preliminary-Spam-Score: Not scanned; message too big
 
   # Use spamassassin to scan messages so we can reject them at SMTP time. This
   # entry just does the check and adds the header, the next entry denies the
@@ -38,7 +38,7 @@ acl_check_data:
   # We pass a  username of "preliminary" to make spamassassin use specific settings
   warn
     spam = preliminary:true
-    add_header = X-Preliminary-Spam-Score: $spam_score ($spam_bar)
+    add_header = :at_start:X-Preliminary-Spam-Score: $spam_score ($spam_bar)
 
   # Deny messages that are really obvious spam (>12 score)
   deny
