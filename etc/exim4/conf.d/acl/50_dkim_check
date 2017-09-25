@@ -1,0 +1,15 @@
+acl_check_dkim:
+      # Add a header with the result, which is useful for debugging (and
+      # perhaps also for bayes)
+      warn
+           add_header = :at_start:X-DKIM-Check: $dkim_verify_status for $dkim_cur_signer ${if def:dkim_verify_reason {($dkim_verify_reason)}}
+
+      # Add a header for succesful DKIM checks, which can be used by the
+      # bayesian spam filter to learn what DKIM domains are good and
+      # which are bad. Do not reject any mail based on failed DKIM checks
+      warn
+           dkim_status = pass
+           add_header = :at_start:X-DKIM-Passed: $dkim_cur_signer
+
+      # Accept everything anyway
+      accept

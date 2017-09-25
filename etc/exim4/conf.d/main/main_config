@@ -53,6 +53,9 @@ acl_smtp_rcpt = acl_check_rcpt
 # Defines the access control list that is run when an
 # SMTP DATA command is received.
 acl_smtp_data = acl_check_data
+# Defines the access control list that is run for each
+# DKIM signature in a mail
+acl_smtp_dkim = acl_check_dkim
 
 spamd_address = /var/run/spamd.socket
 
