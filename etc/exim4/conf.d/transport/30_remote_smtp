@@ -6,5 +6,8 @@
 remote_smtp:
   debug_print = "T: remote_smtp for $local_part@$domain"
   driver = smtp
+  dkim_domain = $acl_m_dkim_domain
+  dkim_selector = 201709.tika
+  dkim_private_key = /etc/exim4/dkim/$dkim_domain.private.key
 
 # vim: set sts=2 expandtab sw=2 ai:

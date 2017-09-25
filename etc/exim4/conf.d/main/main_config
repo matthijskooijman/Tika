@@ -7,6 +7,11 @@ LDAPSERVER=ldap://ldap.local:389
 LDAPBASE=dc=tika,dc=stderr,dc=nl
 LDAPURL=LDAPSERVER/LDAPBASE
 
+# Mail is split into two different DKIM domains, depending on whether it is
+# our own mail, or third-party mail just being forwarded.
+DKIM_FORWARDED=forwarded-mail.tikatika.nl
+DKIM_LOCAL=mail.tikatika.nl
+
 # For all intents and purposes (and mostly how the outside world sees us), we
 # are tika, not mail.local. This is used for qualifying addresses, in received
 # headers, in HELO commands, etc.
