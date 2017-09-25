@@ -40,9 +40,9 @@ acl_check_data:
     spam = preliminary:true
     add_header = :at_start:X-Preliminary-Spam-Score: $spam_score ($spam_bar)
 
-  # Deny messages that are really obvious spam (>12 score)
+  # Deny messages that are really obvious spam
   deny
-    condition = ${if >{$spam_score_int}{80}}
+    condition = ${if >{$spam_score_int}{60}}
     message = Message was classified as spam
 
   # Accept any other messages
