@@ -4,13 +4,20 @@ dovecot: lda\([-_[:alnum:]]*\): msgid=[^:]*: saved mail to .*$
 dovecot-auth: pam_unix\(dovecot:session\): session opened for user [-a-z]* by \(uid=0\)$
 dovecot-auth: pam_unix\(dovecot:session\): session opened for user [-a-z]*$
 dovecot-auth: pam_unix\(dovecot:session\): session closed for user [-a-z]*$
+dovecot: imap\([-_[:alnum:]]+\): Connection closed \(IDLE running for [0-9.]+ \+ waiting input for [0-9.]+ secs(, [0-9.]+ in locks)?, [0-9]+ B in \+ [0-9]+(\+[0-9]+)? B out, state=wait-input\) in=[0-9]+ out=[0-9]+$
+dovecot: imap\([-_[:alnum:]]+\): Connection closed \(No commands sent\) in=[0-9]+ out=[0-9]+$
 dovecot: imap\([-_[:alnum:]]+\): Connection closed in=[0-9]+ out=[0-9]+$
+dovecot: imap\([-_[:alnum:]]+\): Connection closed \([A-Za-z ]+ finished [0-9.]+ secs ago\) in=[0-9]+ out=[0-9]+$
+dovecot: imap\([-_[:alnum:]]+\): Connection closed \([A-Za-z ]+ finished [0-9.]+ secs ago - running for [0-9.]+ \+ waiting for [0-9.]+ secs(, [0-9.]+ in locks)?, [0-9]+ B in \+ [0-9]+ B out\) in=[0-9]+ out=[0-9]+$
+dovecot: imap\([-_[:alnum:]]+\): Connection closed: read\(size=[0-9]+\) failed: Connection reset by peer \([A-Za-z ]+ finished [0-9.]+ secs ago\) in=[0-9]+ out=[0-9]+$
 dovecot: imap\([-_[:alnum:]]+\): Connection closed: Connection reset by peer in=[0-9]+ out=[0-9]+$
 dovecot: imap\([-_[:alnum:]]+\): Disconnected: Logged out in=[0-9]+ out=[0-9]+$
+dovecot: imap\([-_[:alnum:]]+\): Logged out in=[0-9]+ out=[0-9]+$
 dovecot: managesieve\([-_[:alnum:]]+\): Disconnected: Logged out bytes=[/0-9]+$
 dovecot: imap\([-_[:alnum:]]+\): Disconnected: Disconnected( in IDLE)? in=[0-9]+ out=[0-9]+$
 dovecot: imap\([-_[:alnum:]]+\): Disconnected for inactivity( in reading our output)? in=[0-9]+ out=[0-9]+$
-dovecot: (imap|managesieve)-login: (Disconnected|Aborted login)(: (Too many invalid commands\.|Inactivity))? \((no auth attempts in [0-9]+ secs|disconnected before auth was ready, waited [0-9]+ secs|disconnected before greeting, waited [0-9]+ secs|tried to use disallowed plaintext auth|client didn't finish SASL auth, waited [0-9]+ secs|auth failed, [0-9]+ attempts in [0-9]+ secs)\): user=<[a-zA-Z0-9_@.-]*>(, method=PLAIN)?, rip=[.:[:xdigit:]]+, lip=[.:[:xdigit:]]+(, TLS( handshaking)?(: (Disconnected|(SSL_read\(\)|SSL_accept\(\))( syscall)? failed: (Connection reset by peer|error.*)))?)?, session=<[[:alnum:]+=./]+>$
+dovecot: (imap|managesieve)-login: (Disconnected|Aborted login)(: (Too many invalid commands\.?|Inactivity))? \((no auth attempts in [0-9]+ secs|disconnected before auth was ready, waited [0-9]+ secs|disconnected before greeting, waited [0-9]+ secs|tried to use disallowed plaintext auth|client didn't finish SASL auth, waited [0-9]+ secs|auth failed, [0-9]+ attempts in [0-9]+ secs)\): user=<[a-zA-Z0-9_@.-]*>(, method=PLAIN)?, rip=[.:[:xdigit:]]+, lip=[.:[:xdigit:]]+(, TLS( handshaking)?(: (Disconnected|(SSL_read\(\)|SSL_accept\(\))( syscall)? failed: (Connection reset by peer|Success|error.*)))?)?, session=<[[:alnum:]+=./]+>$
+dovecot: imap-login: Disconnected: Too many invalid commands (no auth attempts in 1 secs): user=<>, rip=164.52.0.130, lip=10.42.0.13, TLS, session=<mEW2bBZZSIekNACC>
 dovecot: imap-login: Disconnected \(auth failed, [0-9] attempts in [0-9]+ secs\) user=<[a-zA-Z0-9_-@]+>, rip=[.:[:xdigit:]]+, lip=[.:[:xdigit:]]+, TLS, session=<[[:alnum:]+=./]+>$
 dovecot: managesieve-login: Login: user=<[._[:alnum:]@-]+>, method=[[:alnum:]-]+, rip=[.:[:xdigit:]]+, lip=[.:[:xdigit:]]+, mpid=[[:xdigit:]]+, (TLS( handshake)?|secured), session=<[[:alnum:]+=./]+>$
 dovecot: imap-login: Login: user=<[-_.@[:alnum:]]+>, method=[[:alnum:]-]+, rip=[.:[:xdigit:]]+, lip=[.:[:xdigit:]]+, mpid=[[:xdigit:]]+(, (TLS(| handshake|: (Disconnected|(SSL_read\(\)|SSL_accept\(\))( syscall)? failed: (Connection reset by peer|error.*)))|secured))?, session=<[[:alnum:]+=./]+>$

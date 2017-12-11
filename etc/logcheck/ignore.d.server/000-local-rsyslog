@@ -1,4 +1,5 @@
 rsyslogd: [origin software="rsyslogd" swVersion="[0-9.]*" x-pid="[0-9]*" x-info="http://www.rsyslog.com"] restart$
+liblogging-stdlog:  [origin software="rsyslogd" swVersion="[0-9.]*" x-pid="[0-9]*" x-info="http://www.rsyslog.com"] rsyslogd was HUPed$
 rsyslogd: -- MARK --$
 kernel: Kernel logging \(proc\) stopped.
 kernel: imklog [0-9.]*, log source = /proc/kmsg started.
