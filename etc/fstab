@@ -58,7 +58,3 @@ proc                        /proc           proc    defaults                0   
 
 /etc/skel            /containers/vpn/etc/skel          auto    nofail,defaults,bind,ro      0   0
 /data/users          /containers/vpn/data/users        auto    nofail,defaults,bind         0   0
-
-/etc/skel            /containers/salt/etc/skel          auto    nofail,defaults,bind,ro      0   0
-/data/users          /containers/salt/data/users        auto    nofail,defaults,bind         0   0
-/data/salt           /containers/salt/data/salt         auto    nofail,defaults,bind         0   0
