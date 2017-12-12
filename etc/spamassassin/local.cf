@@ -21,8 +21,10 @@
 #   Set which networks or hosts are considered 'trusted' by your mail
 #   server (i.e. not spammers)
 #
-# trusted_networks 212.17.35.
-
+trusted_networks 83.96.176.0/24 # relay*.dds.nl
+trusted_networks 91.142.252.0/24 # mx*.dds.nl
+trusted_networks 149.210.168.72 # spullenmannen.nl
+trusted_networks 37.97.157.192 # koppelting.nl
 
 #   Set file-locking method (flock is not safe over NFS, but is faster)
 #
