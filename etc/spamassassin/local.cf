@@ -77,6 +77,9 @@ bayes_ignore_header X-Preliminary-Spam-Score
 # match spam more often than ham anyway.
 score RP_MATCHES_RCVD -0.1
 
+# Reduce negative score for unwanted languages. The default 2.8 is a bit much.
+score UNWANTED_LANGUAGE_BODY 1.5
+
 pyzor_options --homedir /data/mail/spamassassin/pyzor
 
 razor_config /data/mail/spamassassin/razor/razor-agent.conf
