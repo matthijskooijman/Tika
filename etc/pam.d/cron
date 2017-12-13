@@ -1,11 +1,21 @@
-#
 # The PAM configuration file for the cron daemon
-#
 
-# cron uses pam_set_cred so it needs a working auth section. It does not do
-# any other real authentication.
-@include		common-auth
+@include common-auth
 
-@include		common-account
+# Sets the loginuid process attribute
+session    required     pam_loginuid.so
 
-@include		common-session
+# Read environment variables from pam_env's default files, /etc/environment
+# and /etc/security/pam_env.conf.
+session       required   pam_env.so
+
+# In addition, read system locale information
+session       required   pam_env.so envfile=/etc/default/locale
+
+@include common-account
+@include common-session-noninteractive 
+
+# Sets up user limits, please define limits for cron tasks
+# through /etc/security/limits.conf
+session    required   pam_limits.so
+
