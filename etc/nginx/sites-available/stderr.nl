@@ -1,6 +1,10 @@
 server {
-	listen 80;
-	listen [::]:80;
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/stderr.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/stderr.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
 
 	server_name www.stderr.nl stderr.nl;
 
@@ -54,8 +58,12 @@ server {
 }
 
 server {
-	listen 80;
-	listen [::]:80;
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/stderr.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/stderr.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
 
 	server_name parts.stderr.nl;
 	root /data/www/$domain/applications/PartKeepr/web;
@@ -73,8 +81,12 @@ server {
 }
 
 server {
-	listen 80;
-	listen [::]:80;
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/stderr.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/stderr.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
 
 	server_name git.stderr.nl;
 
@@ -100,8 +112,12 @@ server {
 }
 
 server {
-	listen 80;
-	listen [::]:80;
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/stderr.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/stderr.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
 
 	server_name apt.stderr.nl;
 	autoindex on;
