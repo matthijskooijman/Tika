@@ -166,8 +166,8 @@ def handle_group_and_user(path):
       except KeyError:
         sys.stderr.write("Invalid admin-group supplied: {}\n".format(opts.admin_group))
         sys.exit(1)
-    if g < MIN_UID_GID:
-      sys.stderr.write("Admin-group gid ({}) cannot be below {}\n".format(g, MIN_UID_GID))
+    if g < MIN_UID_GID and g != 0:
+      sys.stderr.write("Admin-group gid ({}) cannot be below {} (unless it is 0)\n".format(g, MIN_UID_GID))
       sys.exit(1)
 
   u = None
@@ -199,7 +199,7 @@ def handle_group_and_user(path):
     if g is None:
       # The admin-group should be the owning group
       gid = os.stat(p).st_gid
-      if gid >= MIN_UID_GID:
+      if gid >= MIN_UID_GID or gid == 0:
         g = gid
 
     if u is None:
