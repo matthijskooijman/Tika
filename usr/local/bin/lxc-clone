@@ -144,10 +144,6 @@ exclude /run/*
 exclude /var/log/*
 EOF
 
-# Create a link to the rootfs from the container config directory to keep
-# scripts (like lxc-halt) happy.
-sudo ln -s "$TARGET_ROOTFS" "`dirname $TARGET_CONF`/rootfs"
-
 echo "Rootfs created, configuring..."
 
 # Note that this lxc-execute needs the lxc tools installed in the container, so
