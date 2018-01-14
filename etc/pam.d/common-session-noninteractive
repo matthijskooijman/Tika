@@ -23,5 +23,4 @@ session	required			pam_permit.so
 # and here are more per-package modules (the "Additional" block)
 session	required	pam_unix.so 
 session	[success=ok default=ignore]	pam_ldap.so minimum_uid=1000
-session	optional	pam_cgfs.so -c freezer,memory,name=systemd
 # end of pam-auth-update config
