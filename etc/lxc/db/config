@@ -7,7 +7,7 @@ lxc.utsname = db.local
 lxc.rootfs = /containers/db
 
 # Log console output
-lxc.console.logfile = /var/log/lxc/db.lxc
+lxc.console.logfile = /var/log/lxc/db.console
 # Log lxc output
 lxc.logfile = /var/log/lxc/db.log
 

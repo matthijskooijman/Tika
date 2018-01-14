@@ -7,7 +7,7 @@ lxc.utsname = web.local
 lxc.rootfs = /containers/web
 
 # Log console output
-lxc.console.logfile = /var/log/lxc/web.lxc
+lxc.console.logfile = /var/log/lxc/web.console
 # Log lxc output
 lxc.logfile = /var/log/lxc/web.log
 

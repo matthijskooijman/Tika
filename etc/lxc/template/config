@@ -5,7 +5,7 @@ lxc.utsname = template.local
 lxc.rootfs = /containers/template
 
 # Log console output
-lxc.console.logfile = /var/log/lxc/template.lxc
+lxc.console.logfile = /var/log/lxc/template.console
 # Log lxc output
 lxc.logfile = /var/log/lxc/template.log
 

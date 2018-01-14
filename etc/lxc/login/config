@@ -7,7 +7,7 @@ lxc.utsname = login.local
 lxc.rootfs = /containers/login
 
 # Log console output
-lxc.console.logfile = /var/log/lxc/login.lxc
+lxc.console.logfile = /var/log/lxc/login.console
 # Log lxc output
 lxc.logfile = /var/log/lxc/login.log
 
