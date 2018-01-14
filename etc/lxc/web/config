@@ -1,5 +1,3 @@
-lxc.start.auto = 1
-
 # Hostname
 lxc.utsname = web.local
 

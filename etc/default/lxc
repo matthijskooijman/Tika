@@ -1,5 +1,6 @@
 # LXC_AUTO - whether or not to start containers at boot
-LXC_AUTO="true"
+LXC_AUTO="false"
+# Disabled, systemd is used to start containers instead
 
 # BOOTGROUPS - What groups should start on bootup?
 #	Comma separated list of groups.
