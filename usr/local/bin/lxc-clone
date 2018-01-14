@@ -186,10 +186,15 @@ $GIT branch -D "$TEMPLATE"
 # Push our new branch upstream so it can be pushed with "git push" afterwards.
 $GIT push origin "$TARGET:$TARGET"
 
+echo "Enabling auto-start on boot (disable using systemctl disable lxc@$TARGET.service)"
+sudo systemctl enable "lxc@$TARGET.service"
+# This is created by systemctl enable
+TARGET_STARTUP_LINK=/etc/systemd/system/multi-user.target.wants/lxc@$TARGET.service
+
 # Commit the configuration
 echo "Commiting configuration for container '$TARGET'"
-(cd /; sudo git add "$TARGET_CONF")
-(cd /; sudo git commit "$TARGET_CONF" "$FSTAB" --edit --message "lxc: Add $TARGET container configuration") || true
+(cd /; sudo git add "$TARGET_CONF" "$TARGET_STARTUP_LINK")
+(cd /; sudo git commit "$TARGET_CONF" "$FSTAB" "$TARGET_STARTUP_LINK" --edit --message "lxc: Add $TARGET container configuration") || true
 
 echo "Finished creating container '$TARGET'"
 echo "You can now start it using 'lxc-start -d -n $TARGET' and then"
