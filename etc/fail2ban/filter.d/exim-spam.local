@@ -1,0 +1,4 @@
+# Replace all fail regexes with just the one our mail setup is using to reject
+# spam.
+[Definition]
+failregex =  ^%(pid)s \S+ %(host_info)sF=(<>|[^@]+@\S+) rejected after DATA: Message was classified as spam$
