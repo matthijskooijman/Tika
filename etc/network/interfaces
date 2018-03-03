@@ -12,14 +12,9 @@ iface br-inet inet static
         address 94.142.244.14
         netmask 255.255.255.0
         gateway 94.142.244.254
-        post-up ip addr add 94.142.245.160/32 dev br-inet
-        post-up ip addr add 94.142.245.161/32 dev br-inet
-        post-up ip addr add 94.142.245.162/32 dev br-inet
-        post-up ip addr add 94.142.245.163/32 dev br-inet
-        post-down ip addr del 94.142.245.160/32 dev br-inet
-        post-down ip addr del 94.142.245.161/32 dev br-inet
-        post-down ip addr del 94.142.245.162/32 dev br-inet
-        post-down ip addr del 94.142.245.163/32 dev br-inet
+        # Secondary addresses
+        #post-up ip addr add 94.142.245.160/32 dev br-inet
+        #post-down ip addr del 94.142.245.160/32 dev br-inet
 
 iface br-inet inet6 static
         address 2a02:898::87:1/64
@@ -27,15 +22,15 @@ iface br-inet inet6 static
         # Prevent routing unused address back to the default gateway, which
         # will only route them back to us.
         post-up ip route add blackhole 2a02:898:87::/48 dev lo
-        post-up ip route add blackhole 2a02:898:86::/48 dev lo
         post-down ip route del blackhole 2a02:898:87::/48 dev lo
-        post-down ip route del blackhole 2a02:898:86::/48 dev lo
 
         # Set secondary addresses as preferred for 0 seconds, to make sure the
         # primary address is used by default. See
         # http://www.davidc.net/networking/ipv6-source-address-selection-linux
-        post-up ip addr add 2a02:898::86:1/64 dev br-inet preferred_lft 0
-        post-down ip addr del 2a02:898::86:1/64 dev br-inet
+        #post-up ip addr add 2a02:898::86:1/64 dev br-inet preferred_lft 0
+        #post-down ip addr del 2a02:898::86:1/64 dev br-inet
+        #post-up ip route add blackhole 2a02:898:86::/48 dev lo
+        #post-down ip route del blackhole 2a02:898:86::/48 dev lo
 
 auto br-lxc
 iface br-lxc inet static
