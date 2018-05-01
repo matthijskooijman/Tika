@@ -29,7 +29,7 @@ server {
 }
 
 server {
-	server_name exit4.evolution-events.nl;
+	server_name styx.evolution-events.nl bijdestyx.evolution-events.nl;
 
 	listen 443 ssl;
 	listen [::]:443 ssl;
