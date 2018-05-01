@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Intended to be called as lxc network hook using lxc.network.script.up
+CONTAINER=$1
+HOOKTYPE=$2
+UPDOWN=$3
+NETWORK_TYPE=$4
+IFNAME=$5
+
+# Enable hairpin mode for this interface. This allows packets coming
+# into a bridge through this interface to be routed back out of the same
+# port, which is normally not allowed. This is needed for vuurmuur
+# bounce rules to work (e.g. the web container connecting to port 80 on
+# the external IP, which should be routed back to itself).
+bridge link set dev "$5" hairpin on

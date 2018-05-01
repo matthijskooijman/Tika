@@ -19,6 +19,7 @@ lxc.network.name = eth0
 lxc.network.link = br-lxc
 lxc.network.ipv4 = 10.42.0.11/24
 lxc.network.ipv4.gateway = auto
+lxc.network.script.up = /etc/lxc/enable-hairpin
 
 # The number of ttys available (shouldn't be less than the getty's
 # configured in the inittab).
