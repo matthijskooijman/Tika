@@ -16,7 +16,6 @@ Generate SSL certificate for all domains in an nginx config file.
 )
 parser.add_argument("file", help="The nginx config file to process")
 parser.add_argument("--no-dry-run", action='store_true', help="Do not Add --dry-run to the command")
-parser.add_argument("--expand", action='store_true', help="Add --expand to the command")
 parser.add_argument("--verbose", action='store_true', help="Add --verbose to the command")
 
 opts = parser.parse_args()
@@ -25,9 +24,6 @@ command = ['certbot', 'certonly', '--non-interactive', '--webroot', '--config', 
 
 if not opts.no_dry_run:
     command.append('--dry-run')
-
-if opts.expand:
-    command.append('--expand')
 
 if opts.verbose:
     command.append('--verbose')
