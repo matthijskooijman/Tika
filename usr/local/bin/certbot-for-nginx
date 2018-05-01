@@ -32,6 +32,11 @@ if opts.expand:
 if opts.verbose:
     command.append('--verbose')
 
+# Make sure to keep the same certificate name, even when domain names
+# are removed, which normally creates a new certificate / lineage.
+# https://github.com/certbot/certbot/issues/2071
+command.extend(['--cert-name', os.path.basename(opts.file)])
+
 def process(line):
     match = re.match('^\s*server_name\s*(.*);', line)
     if match:
