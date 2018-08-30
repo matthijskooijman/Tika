@@ -4,13 +4,13 @@
 # device; this may be used with UUID= as a more robust way to name devices
 # that works even if disks are added and removed. See fstab(5).
 #
-# <file system>             <mount point>   <type>  <options>               <dump>  <pass>
-proc                        /proc           proc    defaults                0       0
-/dev/mapper/tika-root       /               ext3    errors=remount-ro       0       1
-/dev/mapper/tika-data       /data           ext4    nofail,defaults,acl     0       2
-/dev/mapper/tika-home       /home           ext3    nofail,defaults,acl     0       2
-/dev/mapper/tika-containers /containers     ext4    nofail,defaults,shared  0       2
-/dev/mapper/tika-swap       none            swap    nofail,sw               0       0
+# <file system>                        <mount point>              <type>  <options>               <dump>  <pass>
+proc                                   /proc                      proc    defaults                0       0
+/dev/mapper/tika-root                  /                          ext3    errors=remount-ro       0       1
+/dev/mapper/tika-data                  /data                      ext4    nofail,defaults,acl     0       2
+/dev/mapper/tika-home                  /home                      ext3    nofail,defaults,acl     0       2
+/dev/mapper/tika-containers            /containers                ext4    nofail,defaults,shared  0       2
+/dev/mapper/tika-swap                  none                       swap    nofail,sw               0       0
 
 # Note that bindmounts with options are not normally supported by mount
 # directly (needing a remount to take effect), but are supported here due to a
