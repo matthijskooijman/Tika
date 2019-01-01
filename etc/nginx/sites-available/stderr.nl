@@ -18,6 +18,10 @@ server {
 	    autoindex on;
 	}
 
+	location /static/files {
+	    autoindex on;
+	}
+
 	rewrite ^/$ /Blog/ permanent;
 	# Category got renamed
 	rewrite ^/Blog/personal($|/.*) /Blog/Personal$1 permanent;
