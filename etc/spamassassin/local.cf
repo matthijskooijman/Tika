@@ -25,6 +25,7 @@ trusted_networks 83.96.176.0/24 # relay*.dds.nl
 trusted_networks 91.142.252.0/24 # mx*.dds.nl
 trusted_networks 149.210.168.72 # spullenmannen.nl
 trusted_networks 37.97.157.192 # koppelting.nl
+trusted_networks 10.42.0.0/24 # Tika containers
 
 #   Set file-locking method (flock is not safe over NFS, but is faster)
 #
@@ -117,3 +118,7 @@ ifplugin Mail::SpamAssassin::Plugin::Shortcircuit
 
 endif # Mail::SpamAssassin::Plugin::Shortcircuit
 
+# 20190108 bpeschier Use localhost as DNS so we don't end up in blocklists
+
+dns_available yes
+dns_server 127.0.0.1

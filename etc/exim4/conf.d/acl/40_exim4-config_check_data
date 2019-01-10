@@ -29,7 +29,7 @@ acl_check_data:
   # Don't do spamchecking for big messages, they're unlikely to be spam and
   # cost a lot of resources.
   accept
-    condition = ${if >{$message_size}{100k}}
+    condition = ${if >{$message_size}{1000k}}
     add_header = :at_start:X-Preliminary-Spam-Score: Not scanned; message too big
 
   # Use spamassassin to scan messages so we can reject them at SMTP time. This
