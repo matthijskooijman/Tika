@@ -1,0 +1,6 @@
+[Init]
+# Option:  chain
+# Notes    specifies the iptables chain to which the Fail2Ban rules should be
+#          added
+# Values:  STRING  Default:
+secondary_chain =

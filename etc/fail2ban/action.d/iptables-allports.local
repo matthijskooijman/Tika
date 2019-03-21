@@ -1,0 +1,11 @@
+[Definition]
+# This adds support for secondary_chain
+actionstart = <iptables> -N f2b-<name>
+              <iptables> -A f2b-<name> -j <returntype>
+              <iptables> -I <chain> -p <protocol> -j f2b-<name>
+              [ -z "<secondary_chain>" ] || <iptables> -I <secondary_chain> -p <protocol> -j f2b-<name>
+
+actionstop = <iptables> -D <chain> -p <protocol> -j f2b-<name>
+             [ -z "<secondary_chain>" ] || <iptables> -D <secondary_chain> -p <protocol> -j f2b-<name>
+             <iptables> -F f2b-<name>
+             <iptables> -X f2b-<name>
