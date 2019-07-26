@@ -200,6 +200,8 @@ server {
 	ssl_certificate_key /etc/letsencrypt/live/evolution-events.nl/privkey.pem;
 	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
 
+	client_max_body_size 16M;
+
 	# Enable PHP
 	include enable-php;
 }
