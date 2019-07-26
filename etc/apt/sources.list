@@ -1,8 +1,8 @@
-deb http://ftp.nl.debian.org/debian stretch main contrib non-free
-deb http://security.debian.org/ stretch/updates main contrib non-free
-
-deb http://ftp.nl.debian.org/debian stretch-backports main
 deb http://ftp.nl.debian.org/debian buster main contrib non-free
+deb http://security.debian.org/ buster/updates main contrib non-free
+
+deb http://ftp.nl.debian.org/debian buster-backports main
+deb http://ftp.nl.debian.org/debian bullseye main contrib non-free
 deb http://ftp.nl.debian.org/debian sid main contrib non-free
 
 deb http://apt.stderr.nl stderr main
