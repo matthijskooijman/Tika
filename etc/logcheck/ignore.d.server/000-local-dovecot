@@ -10,6 +10,7 @@ dovecot: imap\([-_[:alnum:]]+\): Connection closed in=[0-9]+ out=[0-9]+$
 dovecot: imap\([-_[:alnum:]]+\): Connection closed \([A-Za-z ]+ finished [0-9.]+ secs ago\) in=[0-9]+ out=[0-9]+$
 dovecot: imap\([-_[:alnum:]]+\): Connection closed \([A-Za-z ]+ finished [0-9.]+ secs ago - running for [0-9.]+ \+ waiting for [0-9.]+ secs(, [0-9.]+ in locks)?, [0-9]+ B in \+ [0-9]+ B out\) in=[0-9]+ out=[0-9]+$
 dovecot: imap\([-_[:alnum:]]+\): Connection closed: read\(size=[0-9]+\) failed: Connection reset by peer \([A-Za-z ]+ finished [0-9.]+ secs ago\) in=[0-9]+ out=[0-9]+$
+dovecot: imap\([-_[:alnum:]]+\): Connection closed: read\(size=[0-9]+\) failed: Connection reset by peer \([A-Za-z ]+ finished [0-9.]+ secs ago - running for [0-9.]+ \+ waiting for [0-9.]+ secs(, [0-9.]+ in locks)?, [0-9]+ B in \+ [0-9]+ B out\) in=[0-9]+ out=[0-9]+$
 dovecot: imap\([-_[:alnum:]]+\): Connection closed: Connection reset by peer in=[0-9]+ out=[0-9]+$
 dovecot: imap\([-_[:alnum:]]+\): Disconnected: Logged out in=[0-9]+ out=[0-9]+$
 dovecot: imap\([-_[:alnum:]]+\): Logged out in=[0-9]+ out=[0-9]+$
