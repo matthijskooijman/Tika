@@ -1,0 +1,11 @@
+[Unit]
+Description=Nuttsh SSH forwarder
+
+[Service]
+Type=simple
+User=nuttssh
+WorkingDirectory=/etc/nuttssh
+ExecStart=/usr/bin/python3 -m nuttssh
+
+[Install]
+WantedBy=multi-user.target
