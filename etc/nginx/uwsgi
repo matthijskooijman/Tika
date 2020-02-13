@@ -1,2 +1,7 @@
 include uwsgi_params;
-uwsgi_pass unix:///run/uwsgi/$domain/$uwsgi_app.socket;
+# Default to using the autodetected main domain, but allow overriding
+# this value (e.g. to run a subdomain isolated from the main domain).
+if ($uwsgi_domain = "") {
+        set $uwsgi_domain $domain;
+}
+uwsgi_pass unix:///run/uwsgi/$uwsgi_domain/$uwsgi_app.socket;
