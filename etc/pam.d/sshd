@@ -24,6 +24,9 @@ session    required     pam_loginuid.so
 # Create a new session keyring.
 session    optional     pam_keyinit.so force revoke
 
+# Create a homedir for the user, if there is none yet.
+session	   optional     pam_mkhomedir.so
+
 # Standard Un*x session setup and teardown.
 @include common-session
 
