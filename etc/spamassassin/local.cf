@@ -83,6 +83,12 @@ score RP_MATCHES_RCVD -0.1
 # Reduce negative score for unwanted languages. The default 2.8 is a bit much.
 score UNWANTED_LANGUAGE_BODY 1.5
 
+# Reduce negative score for word followed by hex string. The default 3.0 is a bit much.
+score HEXHASH_WORD 0.5
+
+# Reduce negative score for word "Dear ...". The default 2.0 is a bit much.
+score DEAR_SOMETHING 0.8
+
 pyzor_options --homedir /data/mail/spamassassin/pyzor
 
 #   Some shortcircuiting, if the plugin is enabled
