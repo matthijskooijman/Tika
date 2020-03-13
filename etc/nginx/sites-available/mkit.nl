@@ -1,8 +1,12 @@
 server {
-	listen 80;
-	listen [::]:80;
-
 	server_name www.mkit.nl mkit.nl;
+
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	ssl_certificate     /etc/letsencrypt/live/mkit.nl/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/mkit.nl/privkey.pem;
+	add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
 
 	# Enable PHP
 	include enable-php;
