@@ -14,7 +14,7 @@
         # Reload rsyslog after rotation, but only once for all scripts
         sharedscripts
         postrotate
-                invoke-rc.d rsyslog rotate > /dev/null
+                /usr/lib/rsyslog/rsyslog-rotate
         endscript
         # Put the rotated logs in a separate dir
         # Disabled, since logrotate insists these directories exist before
@@ -30,6 +30,6 @@
         rotate 1
         daily
         postrotate
-                invoke-rc.d rsyslog rotate > /dev/null
+                /usr/lib/rsyslog/rsyslog-rotate
         endscript
 }
