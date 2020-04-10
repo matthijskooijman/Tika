@@ -83,5 +83,5 @@ lxc.cap.drop = sys_time
 # Disallow changing auditing settings
 lxc.cap.drop = audit_control
 # Disallow various admin tasks (probably has side-effects)
-lxc.cap.drop = sys_admin
+#lxc.cap.drop = sys_admin
 # sys_boot is always dropped by lxc-start
