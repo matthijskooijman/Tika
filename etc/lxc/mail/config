@@ -1,35 +1,37 @@
 # Hostname
-lxc.utsname = mail.local
+lxc.uts.name = mail.local
 
 # Use this root filesystem
-lxc.rootfs = /containers/mail
+lxc.rootfs.path = /containers/mail
 
 # Log console output
 lxc.console.logfile = /var/log/lxc/mail.console
 # Log lxc output
-lxc.logfile = /var/log/lxc/mail.log
+lxc.log.file = /var/log/lxc/mail.log
+
+# Use new-style hook scripts, passing arguments through the environment
+lxc.hook.version=1
 
 # The container gets a single virtual eth0 interface with a statically assigned
 # address (assigned by lxc-start, no need for the container to assign any
 # address itself).
-lxc.network.type = veth
-lxc.network.flags = up
-lxc.network.veth.pair = lxc-mail
-lxc.network.name = eth0
-lxc.network.link = br-lxc
-lxc.network.ipv4 = 10.42.0.13/24
-lxc.network.ipv4.gateway = auto
-lxc.network.script.up = /etc/lxc/enable-hairpin
+lxc.net.0.type = veth
+lxc.net.0.flags = up
+lxc.net.0.veth.pair = lxc-mail
+lxc.net.0.name = eth0
+lxc.net.0.link = br-lxc
+lxc.net.0.ipv4.address = 10.42.0.13/24
+lxc.net.0.ipv4.gateway = auto
+lxc.net.0.script.up = /etc/lxc/enable-hairpin
 
 # The number of ttys available (shouldn't be less than the getty's
 # configured in the inittab).
-lxc.tty = 4
+lxc.tty.max = 4
 
 # Use private pts for the container
-lxc.pts = 256
+lxc.pty.max = 256
 
 # Set up /dev for systemd
-lxc.kmsg = 0
 lxc.autodev = 1
 
 # Deny all devices, except the following
