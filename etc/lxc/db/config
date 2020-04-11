@@ -31,6 +31,11 @@ lxc.tty.max = 4
 # Set up /dev for systemd
 lxc.autodev = 1
 
+# Autogenerate apparmor config to allow nested containerization (used e.g. by
+# systemd to isolate services).
+lxc.apparmor.profile = generated
+lxc.apparmor.allow_nesting = 1
+
 # Use private pts for the container
 lxc.pty.max = 256
 
