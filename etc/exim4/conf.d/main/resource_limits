@@ -1,0 +1,31 @@
+######################################################################
+#                   RESOURCE LIMITS
+######################################################################
+
+# If the load is more than this value, queue incoming messages instead of
+# starting a delivery immediately.
+# Default is unset.
+queue_only_load=3
+
+# If the load is more than this value, stop accepting connections from hosts
+# other than the reserved hosts. Since new connections kick off a spamd, this
+# helps keep the load under control.
+# Default is unset.
+smtp_load_reserve=5
+
+# If the load is more than this value, stop queue processing.
+# Default is unset.
+deliver_queue_load_max=7
+
+# Accept only this much STMP connections in parallel. Since every connection
+# can kick off a spamd (even when delivery is deferred to the queue, since the
+# initial spam scan must be able to reject at SMTP time), this should not be
+# too high.
+# Default is 20.
+smtp_accept_max=10
+
+# Allow connections from these hosts even when the load is high, since we will
+# not run a spam scan for these, it should not add to much load to just accept
+# these messages and queue them.
+# Default is unset.
+smtp_reserve_hosts = +dont_reject_spam_hosts
