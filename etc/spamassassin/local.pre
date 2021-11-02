@@ -1,0 +1,3 @@
+# It seems that loadplugin directives must be in a .pre file, otherwise the
+# plugin (at least TxRep) seems to load, but is not called to scan messages.
+loadplugin Mail::SpamAssassin::Plugin::TxRep

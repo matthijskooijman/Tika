@@ -31,6 +31,8 @@ trusted_networks 149.210.168.72 # spullenmannen.nl
 trusted_networks 37.97.157.192 # koppelting.nl
 trusted_networks 10.42.0.0/24 # Tika containers
 
+internal_networks 10.42.0.0/24 # Tika containers
+
 #   Set file-locking method (flock is not safe over NFS, but is faster)
 #
 # lock_method flock
@@ -131,3 +133,42 @@ dns_server 127.0.0.1
 # razor-admin, but that didn't seem to work either).
 use_razor2 0
 # razor_config /data/mail/spamassassin/razor/razor-agent.conf
+
+# 20211102 matthijs Use TxRep to include scores of previous messages
+# from the same sender (and/or (DKIM) domain and/or helo and/or ip) in
+# new messages, to even out scores (should prevent known good senders
+# from being tripped on a one-off suspicious message). Also allows
+# giving slight bonuses to addresses that receive mail from us, and
+# applies significant bonus/penalty when re-learning ham or spam.
+# Note quite a bit of these config entries use "awl", since txrep was created
+# as a fork of the AWL plugin, without properly changing everything (still also
+# sharing some code).
+# Note that putting the loadplugin for TxRep here instead of in v341.pre did
+# not work, it probably needs to be a in a .pre file.
+use_txrep 1
+
+# On every outgoing message, give this bonus to the recipients. This works by
+# modifying the average score that txrep keeps for the recipient in the same
+# way as an incoming mail with a negative score with the below value. Note
+# that this only affects the "email" score, not the other (email+ip, domain,
+# etc.) scores, so the effect might be somewhat limited (and this has no
+# effect when there is a DKIM or SPF check, since then the email-only check is
+# not done at all).
+# This also requires that outgoing emails pass through spamassassin at some
+# point, and only involve mailservers in the internal_networks.
+txrep_whitelist_out 10
+
+# Store TxRep prefs in MySQL. This should be faster, but also works around a
+# bug where the file-based backend location cannot be changed (and we run
+# without a homedir, so that breaks):
+# https://bz.apache.org/SpamAssassin/show_bug.cgi?id=7383
+txrep_factory                     Mail::SpamAssassin::SQLBasedAddrList
+user_awl_dsn                      DBI:mysql:spamassassin:db.local
+# MysSQL username
+user_awl_sql_username             spamassassin
+# Username to use inside the database data. Override it here to get one global
+# txrep repository, rather than per-user, hopefully that allows sharing
+# reputations and makes results better than per-user reputations.
+user_awl_sql_override_username    $GLOBAL
+# Password is stored in a separate file, so it can be kept out of version
+# control

@@ -34,8 +34,10 @@ acl_check_data:
 
   # Use spamassassin to scan messages so we can reject them at SMTP time. This
   # entry just does the check and adds the header, the next entry denies the
-  # message if needed. 
-  # We pass a  username of "preliminary" to make spamassassin use specific settings
+  # message if needed.
+  # We pass a username of "preliminary" to make spamassassin use specific settings
+  # This is intentionally also ran on outgoing email, so spamassassin can
+  # apply autowhitelisting based on outgoing email.
   warn
     spam = preliminary:true
     add_header = :at_start:X-Preliminary-Spam-Score: $spam_score ($spam_bar)
