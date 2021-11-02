@@ -129,7 +129,6 @@ ifplugin Mail::SpamAssassin::Plugin::Shortcircuit
 endif # Mail::SpamAssassin::Plugin::Shortcircuit
 
 # 20190108 bpeschier Use localhost as DNS so we don't end up in blocklists
-
 dns_available yes
 dns_server 127.0.0.1
 
