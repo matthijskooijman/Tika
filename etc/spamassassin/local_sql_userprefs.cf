@@ -1,5 +1,0 @@
-user_scores_dsn                  DBI:mysql:spamassassin:db.local
-user_scores_sql_username         spamassassin
-user_scores_sql_custom_query     SELECT preference, value FROM _TABLE_ WHERE username = _USERNAME_ OR username = '$GLOBAL' ORDER BY username ASC
-# Password is stored in a separate file, so it can be kept out of version
-# control

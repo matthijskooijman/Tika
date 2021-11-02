@@ -7,6 +7,13 @@
 #
 ###########################################################################
 
+# Load user-specific preferences from Mysql, so they can be configured using Roundcube
+user_scores_dsn                  DBI:mysql:spamassassin:db.local
+user_scores_sql_username         spamassassin
+user_scores_sql_custom_query     SELECT preference, value FROM _TABLE_ WHERE username = _USERNAME_ OR username = '$GLOBAL' ORDER BY username ASC
+# Password is stored in a separate file, so it can be kept out of version
+# control
+
 # Do modify the message body, just add some headers
 report_safe 0
 add_header all Report _REPORT_\nBayes _TOKENSUMMARY_\n- top spam tokens: _SPAMMYTOKENS(4,short)_\n- top ham tokens: _HAMMYTOKENS(4,short)_
