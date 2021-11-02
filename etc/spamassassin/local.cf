@@ -7,16 +7,13 @@
 #
 ###########################################################################
 
-#   Add *****SPAM***** to the Subject header of spam e-mails
-#
-# rewrite_header Subject *****SPAM*****
+# Do modify the message body, just add some headers
+report_safe 0
+add_header all Report _REPORT_\nBayes _TOKENSUMMARY_\n- top spam tokens: _SPAMMYTOKENS(4,short)_\n- top ham tokens: _HAMMYTOKENS(4,short)_
 
-
-#   Save spam messages as a message/rfc822 MIME attachment instead of
-#   modifying the original message (0: off, 2: use text/plain instead)
-#
-# report_safe 1
-
+# Make languages and locales unlikely to be used in .nl suspicious
+ok_languages nl en de fr
+ok_locales en
 
 #   Set which networks or hosts are considered 'trusted' by your mail
 #   server (i.e. not spammers)
@@ -32,15 +29,9 @@ trusted_networks 10.42.0.0/24 # Tika containers
 # lock_method flock
 
 
-#   Set the threshold at which a message is considered spam (default: 5.0)
-#
-# required_score 5.0
-
-
-#   Use Bayesian classifier (default: 1)
-#
-# use_bayes 1
-
+# Use Bayesian classifier
+use_bayes 1
+use_bayes_rules 1
 
 #   Use a global Bayes database, shared among all users. Note that this is
 #   (part of) a filename, the actual files to store data in will be generated
@@ -62,8 +53,8 @@ bayes_learn_during_report 1
 bayes_learn_to_journal 1
 
 #   Bayesian classifier auto-learning (default: 1)
-#
-# bayes_auto_learn 1
+#   Disabled globally, but enabled in userprefs for preliminary scanning
+bayes_auto_learn 0
 
 
 #   Set headers which may provide inappropriate cues to the Bayesian
@@ -89,6 +80,7 @@ score HEXHASH_WORD 0.5
 # Reduce negative score for word "Dear ...". The default 2.0 is a bit much.
 score DEAR_SOMETHING 0.8
 
+use_pyzor 1
 pyzor_options --homedir /data/mail/spamassassin/pyzor
 
 #   Some shortcircuiting, if the plugin is enabled
@@ -130,6 +122,5 @@ dns_server 127.0.0.1
 # 20190318 matthijs Disable razor, it was giving unexplained failures in the
 # log (I also deleted the conf file in an attempt to regenerate it with
 # razor-admin, but that didn't seem to work either).
-#use_razor2 0 # Didn't work, setting score to 0 should also disable a rule
-score RAZOR2_CHECK 0
+use_razor2 0
 # razor_config /data/mail/spamassassin/razor/razor-agent.conf
