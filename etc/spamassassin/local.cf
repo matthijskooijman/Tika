@@ -89,6 +89,11 @@ score HEXHASH_WORD 0.5
 # Reduce negative score for word "Dear ...". The default 2.0 is a bit much.
 score DEAR_SOMETHING 0.8
 
+# Disable suspicious TLD check, this includes .space
+score FROM_SUSPICIOUS_NTLD_FP 0
+score FROM_SUSPICIOUS_NTLD 0
+score PDS_OTHER_BAD_TLD 0
+
 use_pyzor 1
 pyzor_options --homedir /data/mail/spamassassin/pyzor
 
