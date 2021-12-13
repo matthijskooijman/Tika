@@ -77,6 +77,9 @@ server {
 		autoindex on;
 	}
 
+	uwsgi_read_timeout 36000s;
+	uwsgi_send_timeout 36000s;
+
 	# Enable PHP
 	include enable-php;
 }
