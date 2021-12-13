@@ -1,6 +1,9 @@
 MAILTO=root
 
-*/10 * * * * www-data [ -x /usr/share/awstats/tools/update.sh ] && /usr/share/awstats/tools/update.sh
+# Run every 10 minutes, but offset by 5 minutes to prevent running at
+# the entire hour (when Evolution Events opens registrations and
+# generates a lot of traffic, this is usually at a whole hour).
+5-55/10 * * * * www-data [ -x /usr/share/awstats/tools/update.sh ] && /usr/share/awstats/tools/update.sh
 
 # Generate static reports:
 10 03 * * * www-data [ -x /usr/share/awstats/tools/buildstatic.sh ] && /usr/share/awstats/tools/buildstatic.sh
