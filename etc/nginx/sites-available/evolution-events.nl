@@ -500,10 +500,19 @@ server {
 	location ~ ^/static/(.*) {
 		alias /data/www/evolution-events.nl/applications/Artaxerxes/run/static/$1;
 	}
+
 	# And all others through uwsgi
 	location / {
+		#if ($remote_addr != 217.19.19.88 ) {
+		#	return 503;
+		#}
 		set $uwsgi_app app-artaxerxes;
 		include uwsgi;
+	}
+
+	error_page 503 @maintenance;
+	location @maintenance {
+		rewrite ^(.*)$ /maintenance.html break;
 	}
 }
 
