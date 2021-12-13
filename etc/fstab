@@ -8,6 +8,7 @@
 proc                                   /proc                      proc    defaults                0       0
 /dev/mapper/tika-root                  /                          ext3    errors=remount-ro       0       1
 /dev/mapper/tika-data                  /data                      ext4    nofail,defaults,acl     0       2
+/dev/mapper/tika-data--ssd             /data/ssd                  ext4    nofail,defaults,acl     0       2
 /dev/mapper/tika-external--backups     /data/backup/external      ext4    nofail,defaults,acl     0       2
 /dev/mapper/tika-home                  /home                      ext3    nofail,defaults,acl     0       2
 /dev/mapper/tika-containers            /containers                ext4    nofail,defaults,shared  0       2
@@ -31,13 +32,11 @@ proc                                   /proc                      proc    defaul
 
 /etc/skel            /containers/db/etc/skel                auto    nofail,defaults,bind,ro      0   0
 /data/users          /containers/db/data/users              auto    nofail,defaults,bind         0   0
-/data/db/mysql       /containers/db/data/db/mysql           auto    nofail,defaults,bind         0   0
-/data/db/pgsql       /containers/db/data/db/pgsql           auto    nofail,defaults,bind         0   0
-/data/db/mongo       /containers/db/data/db/mongo           auto    nofail,defaults,bind         0   0
+/data/ssd/db         /containers/db/data/db                 auto    nofail,defaults,bind         0   0
 
 /etc/skel            /containers/ldap/etc/skel              auto    nofail,defaults,bind,ro      0   0
 /data/users          /containers/ldap/data/users            auto    nofail,defaults,bind         0   0
-/data/db/ldap        /containers/ldap/data/db/ldap          auto    nofail,defaults,bind         0   0
+/data/ssd/ldap       /containers/ldap/data/ldap             auto    nofail,defaults,bind         0   0
 
 /etc/skel            /containers/login/etc/skel             auto    nofail,defaults,bind,ro      0   0
 /data/users          /containers/login/data/users           auto    nofail,defaults,bind         0   0
