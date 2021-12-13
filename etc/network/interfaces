@@ -8,7 +8,7 @@ iface lo inet loopback
 # The primary network interface
 auto br-inet
 iface br-inet inet static
-        bridge_ports eth0
+        bridge_ports eno1
         address 94.142.244.14
         netmask 255.255.255.0
         gateway 94.142.244.254
