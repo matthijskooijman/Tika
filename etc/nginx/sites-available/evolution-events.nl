@@ -12,6 +12,10 @@ server {
 	include enable-php;
 	# Allow longer execution for /inschrijvingen
 	uwsgi_read_timeout 300;
+
+	location /inschrijvingen/ {
+		return 302 https://arta.evolution-events.nl/;
+	}
 }
 
 server {
