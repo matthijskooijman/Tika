@@ -6,7 +6,7 @@
 /var/log/roundcube/session
 /var/log/roundcube/userlogins
 {
-  create 0640 www-data adm
+  create 0640
   compress
   delaycompress
   missingok
