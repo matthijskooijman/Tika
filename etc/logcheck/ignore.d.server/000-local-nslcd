@@ -1,4 +1,6 @@
 nslcd\[[0-9]*\]: \[[0-9a-f]*\] "[^"]*": user not found$
 nslcd\[[0-9]*\]: \[[0-9a-f]*\] <passwd="[a-z_-]+"> \(re\)loading /etc/nsswitch.conf$
-nslcd\[[0-9]*\]: \[[0-9a-f]*\] <passwd="[^"]*"> request denied by validnames option$
-nslcd\[[0-9]*\]: \[[0-9a-f]*\] <authc="[^"]*"> request denied by validnames option$
+# Somehow the passwd="" was (sometimes?) missing a ending ". I could not find this in the nslcd sources, however...
+nslcd\[[0-9]*\]: \[[0-9a-f]*\] <passwd="[^">]*"?> request denied by validnames option$
+nslcd\[[0-9]*\]: \[[0-9a-f]*\] <authc="[^">]*"?> request denied by validnames option$
+nslcd\[[0-9]*\]: \[[0-9a-f]*\] <authc="[^"]*"> uniqueIdentifier=[0-9]+,uniqueIdentifier=[0-9]+,ou=Persons,dc=tika,dc=stderr,dc=nl: Invalid credentials
