@@ -11,7 +11,4 @@
 #
 # By default this script does nothing.
 
-# Work around this kernel bug^Wfeature: http://www.stderr.nl/Blog/Software/Linux/BouncingPacketsKernelBug.html
-echo 0 > /proc/sys/net/bridge/bridge-nf-call-iptables 
-
 exit 0
