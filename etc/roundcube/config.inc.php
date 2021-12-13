@@ -19,6 +19,8 @@ include_once("/etc/roundcube/debian-db-roundcube.php");
 // For example %n = mail.domain.tld, %t = domain.tld
 $config['default_host'] = array("ssl://mail.tikatika.nl");
 
+$config['managesieve_host'] = 'tls://mail.tikatika.nl';
+
 // SMTP server host (for sending mails).
 // Enter hostname with prefix ssl:// to use Implicit TLS, or use
 // prefix tls:// to use STARTTLS.
