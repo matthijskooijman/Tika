@@ -1,22 +1,6 @@
 <?php
 
-/*
-+-----------------------------------------------------------------------+
-| Local configuration for the Roundcube Webmail installation.           |
-|                                                                       |
-| This is a sample configuration file only containing the minimum       |
-| setup required for a functional installation. Copy more options       |
-| from defaults.inc.php to this file to override the defaults.          |
-|                                                                       |
-| This file is part of the Roundcube Webmail client                     |
-| Copyright (C) The Roundcube Dev Team                                  |
-|                                                                       |
-| Licensed under the GNU General Public License version 3 or            |
-| any later version with exceptions for skins & plugins.                |
-| See the README file for a full license statement.                     |
-+-----------------------------------------------------------------------+
-*/
-
+/* Local configuration for Roundcube Webmail */
 $config = array();
 
 // Do not set db_dsnw here, use dpkg-reconfigure roundcube-core to configure database!
@@ -45,7 +29,7 @@ $config['default_host'] = array("ssl://mail.tikatika.nl");
 // %d - domain (http hostname $_SERVER['HTTP_HOST'] without the first part)
 // %z - IMAP domain (IMAP hostname without the first part)
 // For example %n = mail.domain.tld, %t = domain.tld
-$config['smtp_server'] = 'localhost';
+$config['smtp_server'] = 'tls://mail.tikatika.nl';
 
 // SMTP port. Use 25 for cleartext, 465 for Implicit TLS, or 587 for STARTTLS (default)
 $config['smtp_port'] = 587;
@@ -73,8 +57,7 @@ $config['des_key'] = 'PjeEZDsx3nxk3kex]lGYqoae';
 
 // List of active plugins (in plugins/ directory)
 // Debian: install roundcube-plugins first to have any
-$config['plugins'] = array(
-);
+$config['plugins'] = array('managesieve', 'sauserprefs', 'newmail_notifier', 'additional_message_headers', 'archive', 'markasjunk', 'subscriptions_option', 'userinfo', 'jqueryui');
 
 // skin name: folder from skins/
 $config['skin'] = 'elastic';
@@ -83,6 +66,8 @@ $config['skin'] = 'elastic';
 // Debian: spellchecking needs additional packages to be installed, or calling external APIs
 //         see defaults.inc.php for additional informations
 $config['enable_spellcheck'] = false;
+
+$config['sauserprefs_db_dsnw'] = "$dbtype://$dbuser:$dbpass@$dbserver$dbport/spamassassin";
 
 // the default locale setting (leave empty for auto-detection)
 // RFC1766 formatted language name like en_US, de_DE, de_CH, fr_FR, pt_BR
