@@ -8,13 +8,23 @@
 
 acl_check_data:
 
+  # Deny if the message contains an overlong line.  Per the standards
+  # we should never receive one such via SMTP.
+  #
+  deny
+    condition  = ${if > {$max_received_linelength}{998}}
+    message    = maximum allowed line length is 998 octets, \
+                       got $max_received_linelength
+  .endif
+
   # Deny unless the address list headers are syntactically correct.
   #
   # This might reject legitimate mail...
   deny
     message = Message headers fail syntax check
     !verify = header_syntax
-
+    message = header syntax
+    log_message = header syntax ($acl_verify_message)
 
   # Entries below this all refer to the spamchecking (so add new entries above).
 
