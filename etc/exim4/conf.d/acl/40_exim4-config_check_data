@@ -15,7 +15,6 @@ acl_check_data:
     condition  = ${if > {$max_received_linelength}{998}}
     message    = maximum allowed line length is 998 octets, \
                        got $max_received_linelength
-  .endif
 
   # Deny unless the address list headers are syntactically correct.
   #
