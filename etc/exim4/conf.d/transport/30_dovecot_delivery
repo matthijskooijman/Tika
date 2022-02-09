@@ -11,8 +11,8 @@ dovecot_deliver:
   headers_add = X-Original-Spam-Report: ${if !eq{$rheader_x-spam-report:}{}{$rheader_x-spam-report:}fail}
 
   # Let spamassassin scan the message, using the userpreferences of the user
-  # the message will be delivered to. Also, don't scan any messages > 100K.
-  transport_filter = /usr/bin/spamc -s 102400 -u "${extract{mail}{$address_data}}" --socket=/var/run/spamd.socket
+  # the message will be delivered to. Also, don't scan any messages > 1000K.
+  transport_filter = /usr/bin/spamc -s 1024000 -u "${extract{mail}{$address_data}}" --socket=/var/run/spamd.socket
 
   # Tell deliver about the sender and recipient addresses. Deliver will look
   # up the mailbox location itself. Note that we always use the primary mail
