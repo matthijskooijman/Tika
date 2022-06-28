@@ -96,4 +96,6 @@ daemon_smtp_ports = 25 : 465 : 587
 # explicit in the config prevents a warning about the changed default).
 keep_environment =
 
+message_size_limit = 200M
+
 # vim: set sts=2 expandtab sw=2 ai:
