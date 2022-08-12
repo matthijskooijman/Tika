@@ -7,6 +7,16 @@
 # particular, this is where you can invoke external virus or spam scanners.
 
 acl_check_data:
+  # Accept all bounce messages (empty sender) if the message arrived over an
+  # authenticated connection
+  #
+  # Linux clients that dumbly forward messages to us typically send invalid
+  # headers (e.g. "To: root"), but sometimes the resulting bounce is also
+  # invalid (e.g. dma generates "From: MAILER-DAEMON <>"). This rule ensures
+  # that at least the bounce message is accepted, so we know about the failure.
+  accept
+    authenticated = *
+    senders = :
 
   # Deny if the message contains an overlong line.  Per the standards
   # we should never receive one such via SMTP.
