@@ -1,0 +1,10 @@
+- /data/users/*/.cache
+
+# These have their own backup profiles
+/data/mail
+/data/log
+/data/www
+/data/ssd/db
+
+# These are our own backup cache files
+/data/backup/cache

@@ -1,0 +1,88 @@
+# Disable automatic gpg key importing and exporting. Modifying your keyring
+# should always be done consciously, and the private key should not leave the
+# machine, so do not create export files that could be leaked (e.g. through
+# backup or syncing duply config).
+#
+GPG_IMPORT='disabled'
+GPG_EXPORT='disabled'
+
+# One or more keys to encrypt to. First key is also used to sign if private key is available
+GPG_KEY='97DBF1D43A71D82ADA6973231CA766FBBDB0A980,E7D0C6A75BEE6D84D638F60A3798AF15A1565658'
+
+SSH_KEY=/etc/duply/ssh.key
+if [ -f "$SSH_KEY" ]; then # Optional to allow restoring from other hosts
+    DUPL_PARAMS="$DUPL_PARAMS --ssh-options=-oIdentityFile=$SSH_KEY"
+fi
+TARGET="sftp://tika-backups@krunk/duplicity/$PROFILE"
+
+# https://bford.info/cachedir/
+DUPL_PARAMS="$DUPL_PARAMS --exclude-if-present CACHEDIR.TAG"
+# Our own invention
+DUPL_PARAMS="$DUPL_PARAMS --exclude-if-present NOBACKUP.TAG"
+
+# Upload in the background while creating the next volume
+DUPL_PARAMS="$DUPL_PARAMS --asynchronous-upload"
+
+# Exclude mountpoints (e.g. keep within a single filesystem), except for
+# mountpoints specified in $EXTRA_FILESYSTEMS. The former is like duplicity's
+# --exclude-other-filesystems option, but that does not allow extra filesystems
+# See https://gitlab.com/duplicity/duplicity/-/issues/4 and
+# https://gitlab.com/duplicity/duplicity/-/issues/5
+#
+# This loops mountpoints below SOURCE (and also SOURCE itself if it is /).
+# This greps for any mountpoints starting with SOURCE *and* a /, by removing
+# any trailing slash from SOURCE and then adding exactly one.
+#
+# Note that this does not work for mountpoints containing shell pattern
+# characters (i.e. {}[]*?), since those will be interpreted by the below for
+# loop ($EXTRA_FILESYSTEMS is unquoted to allow word-splitting) *and* by
+# duplicity. See https://gitlab.com/duplicity/duplicity/-/issues/6
+for MOUNTPOINT in $(cat /proc/self/mountinfo | cut -f 5 -d' ' | grep "^${SOURCE%/}/"); do
+    for FS in $EXTRA_FILESYSTEMS "$SOURCE"; do
+        # Skip any fileystems explicitly allowed (strip trailing / just in case)
+        if [ "${FS%/}" = "${MOUNTPOINT%/}" ]; then
+            continue 2;
+        fi
+    done
+    DUPL_PARAMS="$DUPL_PARAMS --exclude $MOUNTPOINT"
+done
+
+#VERBOSITY=5
+
+# Each profile specifies a day of the month they prefer to make a full backup.
+# This calculates the most recent occurence of that day, and requires
+# full-backups to be no older than that date. This means that usually, this
+# will point to the day in the previous month when the full backup happened,
+# until today is the right day, then it will jump ahead to this month and
+# ensure that a full backup is made today (but also when a full backup fails
+# to run for some reason, retry it the next day(s)).
+FULL_DATE=$(date --date "- ${FULL_BACKUP_DAY_OF_MONTH} days + 1 day" +"%Y-%m-${FULL_BACKUP_DAY_OF_MONTH}")
+DUPL_PARAMS="$DUPL_PARAMS --full-if-older-than $FULL_DATE"
+
+# Show occasionaly progress updates for long backups (time in seconds)
+# Disabled, does not seem to work: https://bugs.launchpad.net/duplicity/+bug/1482841
+#DUPL_PARAMS="$DUPL_PARAMS --progress --progress-rate 1800"
+
+#DUPL_PARAMS="$DUPL_PARAMS --dry-run"
+
+# Defines a folder that holds unencrypted meta data of the backup, enabling new
+# incrementals without the need to download and decrypt backend metadata first.
+# If empty or deleted somehow, the private key and it's password are needed.
+ARCH_DIR=/data/backup/cache/duplicity
+if ! [ -d "$ARCH_DIR" ]; then # Allow restoring from other hosts
+    # But keep the archive dir in sight, rathe than ending up big in ~/.cache somewhere
+    ARCH_DIR=${CONFDIR}/../archive-cache
+fi
+
+# To support different combinations of purging configs, we need defaults for
+# the the unused paramaters and possibly more purging commands in the systemd
+# file.
+# See https://sourceforge.net/p/ftplicity/feature-requests/48/#0c09
+if [ -z "$MAX_AGE" -o -z "$MAX_FULLS_WITH_INCRS" ]; then
+    echo "MAX_AGE and MAX_FULLS_WITH_INCRS must be set, see /etc/duply/common"
+    exit 1
+fi
+if [ -n "$MAX_FULL_BACKUPS" ]; then
+    echo "MAX_FULL_BACKUPS cannot be set, see /etc/duply/common"
+    exit 1
+fi

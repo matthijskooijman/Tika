@@ -1,0 +1,4 @@
+# This contains cached message contents, safe to omit. Other dovecot.index
+# files are *probably* cache data only (at least for Maildir, not for dbox),
+# but to be safe, just keep them in.
+- **/dovecot.index.cache

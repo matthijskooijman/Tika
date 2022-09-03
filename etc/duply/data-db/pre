@@ -1,0 +1,33 @@
+#!/bin/sh -e
+
+MYSQL_DIR=/data/ssd/db/mysql-dumps
+CONTAINER=db
+
+dump_mysql_databases() {
+    LXC_RUN="lxc-attach -n $CONTAINER --"
+    DBNAMES="$($LXC_RUN mysql --defaults-file=/etc/mysql/debian.cnf --batch --skip-column-names -e "show databases"| sed 's/ /%/g')"
+
+    # Check that MYSQLDIR exists, to prevent erasing too much
+    [ -n "$MYSQL_DIR" -a -d "$MYSQL_DIR" ] || ( echo >&2 "$MYSQL_DIR: Does not exist" && false )
+
+    ORIGINAL_SIZE=$(du -s "$MYSQL_DIR" | cut -f 1)
+    rm "$MYSQL_DIR"/* || true
+
+    for DB in $DBNAMES; do
+        if [ "$DB" != information_schema -a "$DB" != performance_schema ]; then
+            OUTPUT="$MYSQL_DIR/$DB.sql"
+            echo "Dumping database $DB to $OUTPUT"
+            $LXC_RUN mysqldump --defaults-file=/etc/mysql/debian.cnf --single-transaction --quote-names --events --routines "$DB" > "$OUTPUT"
+        fi
+    done
+
+    # Sanity check, backups should normally get bigger
+    NEW_SIZE=$(du -s "$MYSQL_DIR" | cut -f 1)
+    COUNT=$(echo "$DBNAMES" | wc -l)
+    echo "Dumped $COUNT databases, size changed from $ORIGINAL_SIZE bytes to $NEW_SIZE bytes"
+    if [ "$NEW_SIZE" -lt "$ORIGINAL_SIZE" -o "$NEW_SIZE" -eq 0 ]; then
+        echo >&2 "WARNING: Mysql backup size became smaller (from $ORIGINAL_SIZE bytes to $NEW_SIZE bytes, $((ORIGINAL_SIZE - NEW_SIZE)) bytes smaller)!"
+    fi
+}
+
+dump_mysql_databases

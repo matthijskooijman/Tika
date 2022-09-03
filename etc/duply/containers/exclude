@@ -1,0 +1,7 @@
+- /containers/*/lib/modules
+- /containers/*/tmp
+- /containers/*/run
+- /containers/*/var/cache
+- /containers/*/var/run
+- /containers/*/var/tmp
+- /containers/*/var/lib/apt/lists

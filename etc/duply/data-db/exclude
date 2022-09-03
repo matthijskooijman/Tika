@@ -1,0 +1,7 @@
+# These have personal data, so are included in the data-db-short profile only
+- /data/ssd/db/mysql-dumps/ee_artaxerxes*.sql
+- /data/ssd/db/mysql-dumps/ee_inschrijving*.sql
+
+# Backed up as dumps, so exclude here
+- /data/ssd/db/mysql
+- /data/ssd/db/mongo

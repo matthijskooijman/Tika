@@ -1,0 +1,8 @@
+- /run
+- /tmp
+- /var/cache
+- /var/run
+- /var/tmp
+- /var/lib/apt/lists
+
+- /home/*/.cache

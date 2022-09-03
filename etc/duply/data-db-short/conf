@@ -1,0 +1,7 @@
+SOURCE=/data/ssd/db
+
+MAX_AGE=2M
+MAX_FULLS_WITH_INCRS=2
+FULL_BACKUP_DAY_OF_MONTH=2
+
+. ${CONFDIR}/../common

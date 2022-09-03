@@ -1,0 +1,7 @@
+# Note that this includes *all* databases, not just the sensitive ones. This
+# means most databases will be backed up twice, but that's better than
+# forgetting one here and missing a database.
+
+# Backed up as dumps, so exclude here
+- /data/ssd/db/mysql
+- /data/ssd/db/mongo
