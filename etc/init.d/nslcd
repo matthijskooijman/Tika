@@ -38,7 +38,7 @@ NSLCD_NAME=nslcd
 NSLCD_BIN=/usr/sbin/$NSLCD_NAME
 NSLCD_DESC="LDAP connection daemon"
 NSLCD_CFG=/etc/nslcd.conf
-NSLCD_STATEDIR=/var/run/nslcd
+NSLCD_STATEDIR=/run/nslcd
 NSLCD_PIDFILE=$NSLCD_STATEDIR/nslcd.pid
 
 [ -x "$NSLCD_BIN" ] || exit 0
