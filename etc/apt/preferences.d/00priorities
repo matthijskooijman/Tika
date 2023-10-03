@@ -6,6 +6,10 @@ Pin: release o=Debian,n=bullseye
 Pin-Priority: 990
 
 Package: *
+Pin: release o=Debian,n=bullseye-security
+Pin-Priority: 990
+
+Package: *
 Pin: release o=apt.stderr.nl,a=stderr
 Pin-Priority: 990
 
