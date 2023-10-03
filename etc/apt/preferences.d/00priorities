@@ -17,6 +17,11 @@ Package: *
 Pin: release o=Debian Backports
 Pin-Priority: 900
 
+Explanation: This applies when we are running oldstable, then treat the newer stable similarly to testing.
+Package: *
+Pin: release o=Debian,a=stable
+Pin-Priority: 850
+
 Package: *
 Pin: release o=Debian,a=testing
 Pin-Priority: 800
