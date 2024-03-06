@@ -70,9 +70,12 @@ DUPL_PARAMS="$DUPL_PARAMS --full-if-older-than $FULL_DATE"
 # If empty or deleted somehow, the private key and it's password are needed.
 ARCH_DIR=/data/backup/cache/duplicity
 if ! [ -d "$ARCH_DIR" ]; then # Allow restoring from other hosts
-    # But keep the archive dir in sight, rathe than ending up big in ~/.cache somewhere
+    # But keep the archive dir in sight, rather than ending up big in ~/.cache somewhere
     ARCH_DIR=${CONFDIR}/../archive-cache
 fi
+
+# Use a non-standard tempdir to prevent overflowing tmpfs mounted by systemd on /tmp
+TEMP_DIR=$ARCH_DIR/tmp
 
 # To support different combinations of purging configs, we need defaults for
 # the the unused paramaters and possibly more purging commands in the systemd
