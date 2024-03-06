@@ -58,6 +58,7 @@ proc                                   /proc                      proc    defaul
 /data/vcs            /containers/web/data/vcs               auto    nofail,defaults,bind         0   0
 /data/apt-repository /containers/web/data/apt-repository    auto    nofail,defaults,bind         0   0
 /data/applications   /containers/web/data/applications      auto    nofail,defaults,bind         0   0
+/data/ssd/db/netdata /containers/web/data/db/netdata        auto    nofail,defaults,bind         0   0
 
 /etc/skel            /containers/vpn/etc/skel          auto    nofail,defaults,bind,ro      0   0
 /data/users          /containers/vpn/data/users        auto    nofail,defaults,bind         0   0
