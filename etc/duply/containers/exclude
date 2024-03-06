@@ -5,3 +5,4 @@
 - /containers/*/var/run
 - /containers/*/var/tmp
 - /containers/*/var/lib/apt/lists
+- /containers/*/var/log
