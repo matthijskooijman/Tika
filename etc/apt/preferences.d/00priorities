@@ -2,7 +2,11 @@ Explanation: see http://www.argon.org/~roderick/apt-pinning.html
 Explanation: Adapted to make all priorties higher than the default of 500 and
 Explanation: remove the -1 fallback
 Package: *
-Pin: release o=Debian,n=bullseye
+Pin: release o=Debian,n=bookworm
+Pin-Priority: 990
+
+Package: *
+Pin: release o=Debian,n=bookworm-security
 Pin-Priority: 990
 
 Package: *
@@ -10,8 +14,13 @@ Pin: release o=apt.stderr.nl,a=stderr
 Pin-Priority: 990
 
 Package: *
-Pin: release o=Debian Backports,a=bullseye-backports
+Pin: release o=Debian Backports,a=bookworm-backports
 Pin-Priority: 900
+
+Explanation: This applies when we are running oldstable, then treat the newer stable similarly to testing.
+Package: *
+Pin: release o=Debian,a=stable
+Pin-Priority: 850
 
 Package: *
 Pin: release o=Debian,a=testing
