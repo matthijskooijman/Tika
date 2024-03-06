@@ -5,7 +5,8 @@ deb http://ftp.nl.debian.org/debian bullseye-backports main
 deb http://ftp.nl.debian.org/debian bookworm main contrib non-free
 deb http://ftp.nl.debian.org/debian sid main contrib non-free
 
-deb ftp://ftp.vuurmuur.org/debian/ sid svn
+# No longer available?
+#deb ftp://ftp.vuurmuur.org/debian/ sid svn
 
 # Our own custom repository
 deb http://apt.stderr.nl stderr main
