@@ -1,0 +1,29 @@
+Types: deb
+URIs: http://ftp.nl.debian.org/debian/
+Suites: bookworm
+Components: main  contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+
+Types: deb
+URIs: http://security.debian.org/
+Suites: bookworm-security
+Components: main  contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+
+Types: deb
+URIs: http://ftp.nl.debian.org/debian/
+Suites: bookworm-backports
+Components: main 
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+
+Types: deb
+URIs: http://ftp.nl.debian.org/debian/
+Suites: trixie
+Components: main  contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
+
+Types: deb
+URIs: http://ftp.nl.debian.org/debian/
+Suites: sid
+Components: main  contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
