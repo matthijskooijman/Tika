@@ -2,11 +2,11 @@ Explanation: see http://www.argon.org/~roderick/apt-pinning.html
 Explanation: Adapted to make all priorties higher than the default of 500 and
 Explanation: remove the -1 fallback
 Package: *
-Pin: release o=Debian,n=bookworm
+Pin: release o=Debian,n=trixie
 Pin-Priority: 990
 
 Package: *
-Pin: release o=Debian,n=bookworm-security
+Pin: release o=Debian,n=trixie-security
 Pin-Priority: 990
 
 Package: *
