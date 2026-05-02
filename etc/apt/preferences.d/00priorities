@@ -10,10 +10,6 @@ Pin: release o=Debian,n=bookworm-security
 Pin-Priority: 990
 
 Package: *
-Pin: release o=apt.stderr.nl,a=stderr
-Pin-Priority: 990
-
-Package: *
 Pin: release o=Debian Backports
 Pin-Priority: 900
 
@@ -29,12 +25,3 @@ Pin-Priority: 800
 Package: *
 Pin: release o=Debian,a=unstable
 Pin-Priority: 700
-
-# Prefer netdata repo for netdata packages, but nothing else
-Package: netdata*
-Pin: origin repo.netdata.cloud
-Pin-Priority: 991
-
-Package: *
-Pin: origin repo.netdata.cloud
-Pin-Priority: -1
