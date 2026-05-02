@@ -1,0 +1,2 @@
+# Allow tika-admins full sudo access
+%tika-admins ALL=(ALL) ALL
